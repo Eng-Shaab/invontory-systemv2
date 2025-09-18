@@ -1,0 +1,242 @@
+[
+  {
+    "purchaseId": "clh8z1n4q0000purchase001",
+    "productId": "clh8x2k3n0000qwerty123456",
+    "quantity": 50,
+    "unitCost": 899.99,
+    "totalCost": 44999.5,
+    "createdAt": "2024-01-15T08:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0001purchase002",
+    "productId": "clh8x2k3n0001qwerty123456",
+    "quantity": 40,
+    "unitCost": 999.99,
+    "totalCost": 39999.6,
+    "createdAt": "2024-01-16T10:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0002purchase003",
+    "productId": "clh8x2k3n0002qwerty123456",
+    "quantity": 25,
+    "unitCost": 999.99,
+    "totalCost": 24999.75,
+    "createdAt": "2024-01-18T14:20:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0003purchase004",
+    "productId": "clh8x2k3n0003qwerty123456",
+    "quantity": 30,
+    "unitCost": 799.99,
+    "totalCost": 23999.7,
+    "createdAt": "2024-01-20T11:15:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0004purchase005",
+    "productId": "clh8x2k3n0004qwerty123456",
+    "quantity": 45,
+    "unitCost": 749.99,
+    "totalCost": 33749.55,
+    "createdAt": "2024-01-22T09:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0005purchase006",
+    "productId": "clh8x2k3n0005qwerty123456",
+    "quantity": 100,
+    "unitCost": 179.99,
+    "totalCost": 17999,
+    "createdAt": "2024-01-25T16:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0006purchase007",
+    "productId": "clh8x2k3n0006qwerty123456",
+    "quantity": 60,
+    "unitCost": 249.99,
+    "totalCost": 14999.4,
+    "createdAt": "2024-01-28T13:20:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0007purchase008",
+    "productId": "clh8x2k3n0007qwerty123456",
+    "quantity": 35,
+    "unitCost": 279.99,
+    "totalCost": 9799.65,
+    "createdAt": "2024-02-01T12:00:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0008purchase009",
+    "productId": "clh8x2k3n0008qwerty123456",
+    "quantity": 15,
+    "unitCost": 399.99,
+    "totalCost": 5999.85,
+    "createdAt": "2024-02-03T15:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0009purchase010",
+    "productId": "clh8x2k3n0009qwerty123456",
+    "quantity": 20,
+    "unitCost": 399.99,
+    "totalCost": 7999.8,
+    "createdAt": "2024-02-05T10:15:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0010purchase011",
+    "productId": "clh8x2k3n0010qwerty123456",
+    "quantity": 70,
+    "unitCost": 299.99,
+    "totalCost": 20999.3,
+    "createdAt": "2024-02-08T14:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0011purchase012",
+    "productId": "clh8x2k3n0011qwerty123456",
+    "quantity": 50,
+    "unitCost": 199.99,
+    "totalCost": 9999.5,
+    "createdAt": "2024-02-10T11:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0012purchase013",
+    "productId": "clh8x2k3n0012qwerty123456",
+    "quantity": 30,
+    "unitCost": 649.99,
+    "totalCost": 19499.7,
+    "createdAt": "2024-02-12T16:20:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0013purchase014",
+    "productId": "clh8x2k3n0013qwerty123456",
+    "quantity": 25,
+    "unitCost": 399.99,
+    "totalCost": 9999.75,
+    "createdAt": "2024-02-15T09:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0014purchase015",
+    "productId": "clh8x2k3n0014qwerty123456",
+    "quantity": 30,
+    "unitCost": 799.99,
+    "totalCost": 23999.7,
+    "createdAt": "2024-02-18T13:15:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0015purchase016",
+    "productId": "clh8x2k3n0015qwerty123456",
+    "quantity": 35,
+    "unitCost": 899.99,
+    "totalCost": 31499.65,
+    "createdAt": "2024-02-20T10:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0016purchase017",
+    "productId": "clh8x2k3n0016qwerty123456",
+    "quantity": 20,
+    "unitCost": 1099.99,
+    "totalCost": 21999.8,
+    "createdAt": "2024-02-22T15:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0017purchase018",
+    "productId": "clh8x2k3n0017qwerty123456",
+    "quantity": 10,
+    "unitCost": 1799.99,
+    "totalCost": 17999.9,
+    "createdAt": "2024-02-25T12:20:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0018purchase019",
+    "productId": "clh8x2k3n0018qwerty123456",
+    "quantity": 8,
+    "unitCost": 1999.99,
+    "totalCost": 15999.92,
+    "createdAt": "2024-02-28T14:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0019purchase020",
+    "productId": "clh8x2k3n0019qwerty123456",
+    "quantity": 25,
+    "unitCost": 599.99,
+    "totalCost": 14999.75,
+    "createdAt": "2024-03-02T11:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0020purchase021",
+    "productId": "clh8x2k3n0020qwerty123456",
+    "quantity": 60,
+    "unitCost": 299.99,
+    "totalCost": 17999.4,
+    "createdAt": "2024-03-05T16:15:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0021purchase022",
+    "productId": "clh8x2k3n0021qwerty123456",
+    "quantity": 40,
+    "unitCost": 179.99,
+    "totalCost": 7199.6,
+    "createdAt": "2024-03-08T09:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0022purchase023",
+    "productId": "clh8x2k3n0022qwerty123456",
+    "quantity": 150,
+    "unitCost": 29.99,
+    "totalCost": 4498.5,
+    "createdAt": "2024-03-10T13:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0023purchase024",
+    "productId": "clh8x2k3n0023qwerty123456",
+    "quantity": 100,
+    "unitCost": 59.99,
+    "totalCost": 5999,
+    "createdAt": "2024-03-12T10:20:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0024purchase025",
+    "productId": "clh8x2k3n0024qwerty123456",
+    "quantity": 50,
+    "unitCost": 79.99,
+    "totalCost": 3999.5,
+    "createdAt": "2024-03-15T15:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0025purchase026",
+    "productId": "clh8x2k3n0025qwerty123456",
+    "quantity": 3,
+    "unitCost": 89999.99,
+    "totalCost": 269999.97,
+    "createdAt": "2024-03-18T12:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0026purchase027",
+    "productId": "clh8x2k3n0026qwerty123456",
+    "quantity": 20,
+    "unitCost": 549.99,
+    "totalCost": 10999.8,
+    "createdAt": "2024-03-20T14:15:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0027purchase028",
+    "productId": "clh8x2k3n0027qwerty123456",
+    "quantity": 18,
+    "unitCost": 599.99,
+    "totalCost": 10799.82,
+    "createdAt": "2024-03-22T11:30:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0028purchase029",
+    "productId": "clh8x2k3n0028qwerty123456",
+    "quantity": 6,
+    "unitCost": 1799.99,
+    "totalCost": 10799.94,
+    "createdAt": "2024-03-25T16:45:00.000Z"
+  },
+  {
+    "purchaseId": "clh8z1n4q0029purchase030",
+    "productId": "clh8x2k3n0029qwerty123456",
+    "quantity": 80,
+    "unitCost": 119.99,
+    "totalCost": 9599.2,
+    "createdAt": "2024-03-28T13:20:00.000Z"
+  }
+]

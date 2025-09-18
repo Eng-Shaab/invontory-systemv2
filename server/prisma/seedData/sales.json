@@ -1,0 +1,362 @@
+[
+  {
+    "saleId": "clh9a3o5r0000sale0000001",
+    "productId": "clh8x2k3n0000qwerty123456",
+    "customerId": "clh8y5m2p0000customer001",
+    "quantity": 1,
+    "unitPrice": 1199.99,
+    "totalAmount": 1199.99,
+    "profit": 300.00,
+    "createdAt": "2024-01-20T10:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0001sale0000002",
+    "productId": "clh8x2k3n0001qwerty123456",
+    "customerId": "clh8y5m2p0001customer002",
+    "quantity": 1,
+    "unitPrice": 1299.99,
+    "totalAmount": 1299.99,
+    "profit": 300.00,
+    "createdAt": "2024-01-21T14:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0002sale0000003",
+    "productId": "clh8x2k3n0005qwerty123456",
+    "customerId": "clh8y5m2p0002customer003",
+    "quantity": 2,
+    "unitPrice": 249.99,
+    "totalAmount": 499.98,
+    "profit": 140.00,
+    "createdAt": "2024-01-22T11:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0003sale0000004",
+    "productId": "clh8x2k3n0006qwerty123456",
+    "customerId": "clh8y5m2p0003customer004",
+    "quantity": 1,
+    "unitPrice": 349.99,
+    "totalAmount": 349.99,
+    "profit": 100.00,
+    "createdAt": "2024-01-23T16:20:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0004sale0000005",
+    "productId": "clh8x2k3n0002qwerty123456",
+    "customerId": "clh8y5m2p0004customer005",
+    "quantity": 1,
+    "unitPrice": 1299.99,
+    "totalAmount": 1299.99,
+    "profit": 300.00,
+    "createdAt": "2024-01-25T09:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0005sale0000006",
+    "productId": "clh8x2k3n0007qwerty123456",
+    "customerId": "clh8y5m2p0005customer006",
+    "quantity": 1,
+    "unitPrice": 349.99,
+    "totalAmount": 349.99,
+    "profit": 70.00,
+    "createdAt": "2024-01-26T13:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0006sale0000007",
+    "productId": "clh8x2k3n0010qwerty123456",
+    "customerId": "clh8y5m2p0006customer007",
+    "quantity": 1,
+    "unitPrice": 399.99,
+    "totalAmount": 399.99,
+    "profit": 100.00,
+    "createdAt": "2024-01-28T15:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0007sale0000008",
+    "productId": "clh8x2k3n0004qwerty123456",
+    "customerId": "clh8y5m2p0007customer008",
+    "quantity": 1,
+    "unitPrice": 999.99,
+    "totalAmount": 999.99,
+    "profit": 250.00,
+    "createdAt": "2024-01-30T12:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0008sale0000009",
+    "productId": "clh8x2k3n0008qwerty123456",
+    "customerId": "clh8y5m2p0008customer009",
+    "quantity": 1,
+    "unitPrice": 499.99,
+    "totalAmount": 499.99,
+    "profit": 100.00,
+    "createdAt": "2024-02-02T10:20:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0009sale0000010",
+    "productId": "clh8x2k3n0009qwerty123456",
+    "customerId": "clh8y5m2p0009customer010",
+    "quantity": 1,
+    "unitPrice": 499.99,
+    "totalAmount": 499.99,
+    "profit": 100.00,
+    "createdAt": "2024-02-04T14:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0010sale0000011",
+    "productId": "clh8x2k3n0005qwerty123456",
+    "customerId": "clh8y5m2p0010customer011",
+    "quantity": 3,
+    "unitPrice": 249.99,
+    "totalAmount": 749.97,
+    "profit": 210.00,
+    "createdAt": "2024-02-06T11:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0011sale0000012",
+    "productId": "clh8x2k3n0011qwerty123456",
+    "customerId": "clh8y5m2p0011customer012",
+    "quantity": 1,
+    "unitPrice": 299.99,
+    "totalAmount": 299.99,
+    "profit": 100.00,
+    "createdAt": "2024-02-08T16:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0012sale0000013",
+    "productId": "clh8x2k3n0012qwerty123456",
+    "customerId": "clh8y5m2p0012customer013",
+    "quantity": 1,
+    "unitPrice": 899.99,
+    "totalAmount": 899.99,
+    "profit": 250.00,
+    "createdAt": "2024-02-10T13:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0013sale0000014",
+    "productId": "clh8x2k3n0013qwerty123456",
+    "customerId": "clh8y5m2p0013customer014",
+    "quantity": 1,
+    "unitPrice": 549.99,
+    "totalAmount": 549.99,
+    "profit": 150.00,
+    "createdAt": "2024-02-12T09:20:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0014sale0000015",
+    "productId": "clh8x2k3n0003qwerty123456",
+    "customerId": "clh8y5m2p0014customer015",
+    "quantity": 1,
+    "unitPrice": 1099.99,
+    "totalAmount": 1099.99,
+    "profit": 300.00,
+    "createdAt": "2024-02-14T15:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0015sale0000016",
+    "productId": "clh8x2k3n0020qwerty123456",
+    "customerId": "clh8y5m2p0015customer016",
+    "quantity": 2,
+    "unitPrice": 399.99,
+    "totalAmount": 799.98,
+    "profit": 200.00,
+    "createdAt": "2024-02-16T12:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0016sale0000017",
+    "productId": "clh8x2k3n0021qwerty123456",
+    "customerId": "clh8y5m2p0016customer017",
+    "quantity": 1,
+    "unitPrice": 249.99,
+    "totalAmount": 249.99,
+    "profit": 70.00,
+    "createdAt": "2024-02-18T14:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0017sale0000018",
+    "productId": "clh8x2k3n0022qwerty123456",
+    "customerId": "clh8y5m2p0017customer018",
+    "quantity": 4,
+    "unitPrice": 49.99,
+    "totalAmount": 199.96,
+    "profit": 80.00,
+    "createdAt": "2024-02-20T10:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0018sale0000019",
+    "productId": "clh8x2k3n0023qwerty123456",
+    "customerId": "clh8y5m2p0018customer019",
+    "quantity": 2,
+    "unitPrice": 99.99,
+    "totalAmount": 199.98,
+    "profit": 80.00,
+    "createdAt": "2024-02-22T16:20:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0019sale0000020",
+    "productId": "clh8x2k3n0024qwerty123456",
+    "customerId": "clh8y5m2p0019customer020",
+    "quantity": 1,
+    "unitPrice": 129.99,
+    "totalAmount": 129.99,
+    "profit": 50.00,
+    "createdAt": "2024-02-24T13:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0020sale0000021",
+    "productId": "clh8x2k3n0019qwerty123456",
+    "customerId": "clh8y5m2p0020customer021",
+    "quantity": 1,
+    "unitPrice": 799.99,
+    "totalAmount": 799.99,
+    "profit": 200.00,
+    "createdAt": "2024-02-26T11:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0021sale0000022",
+    "productId": "clh8x2k3n0029qwerty123456",
+    "customerId": "clh8y5m2p0021customer022",
+    "quantity": 2,
+    "unitPrice": 159.99,
+    "totalAmount": 319.98,
+    "profit": 80.00,
+    "createdAt": "2024-02-28T15:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0022sale0000023",
+    "productId": "clh8x2k3n0000qwerty123456",
+    "customerId": "clh8y5m2p0022customer023",
+    "quantity": 1,
+    "unitPrice": 1199.99,
+    "totalAmount": 1199.99,
+    "profit": 300.00,
+    "createdAt": "2024-03-02T12:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0023sale0000024",
+    "productId": "clh8x2k3n0001qwerty123456",
+    "customerId": "clh8y5m2p0023customer024",
+    "quantity": 1,
+    "unitPrice": 1299.99,
+    "totalAmount": 1299.99,
+    "profit": 300.00,
+    "createdAt": "2024-03-04T09:20:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0024sale0000025",
+    "productId": "clh8x2k3n0015qwerty123456",
+    "customerId": "clh8y5m2p0024customer025",
+    "quantity": 1,
+    "unitPrice": 1199.99,
+    "totalAmount": 1199.99,
+    "profit": 300.00,
+    "createdAt": "2024-03-06T14:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0025sale0000026",
+    "productId": "clh8x2k3n0016qwerty123456",
+    "customerId": "clh8y5m2p0025customer026",
+    "quantity": 1,
+    "unitPrice": 1399.99,
+    "totalAmount": 1399.99,
+    "profit": 300.00,
+    "createdAt": "2024-03-08T11:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0026sale0000027",
+    "productId": "clh8x2k3n0017qwerty123456",
+    "customerId": "clh8y5m2p0026customer027",
+    "quantity": 1,
+    "unitPrice": 2199.99,
+    "totalAmount": 2199.99,
+    "profit": 400.00,
+    "createdAt": "2024-03-10T16:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0027sale0000028",
+    "productId": "clh8x2k3n0018qwerty123456",
+    "customerId": "clh8y5m2p0027customer028",
+    "quantity": 1,
+    "unitPrice": 2499.99,
+    "totalAmount": 2499.99,
+    "profit": 500.00,
+    "createdAt": "2024-03-12T13:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0028sale0000029",
+    "productId": "clh8x2k3n0026qwerty123456",
+    "customerId": "clh8y5m2p0028customer029",
+    "quantity": 1,
+    "unitPrice": 749.99,
+    "totalAmount": 749.99,
+    "profit": 200.00,
+    "createdAt": "2024-03-14T10:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0029sale0000030",
+    "productId": "clh8x2k3n0027qwerty123456",
+    "customerId": "clh8y5m2p0029customer030",
+    "quantity": 1,
+    "unitPrice": 799.99,
+    "totalAmount": 799.99,
+    "profit": 200.00,
+    "createdAt": "2024-03-16T15:20:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0030sale0000031",
+    "productId": "clh8x2k3n0025qwerty123456",
+    "customerId": "clh8y5m2p0000customer001",
+    "quantity": 1,
+    "unitPrice": 109999.99,
+    "totalAmount": 109999.99,
+    "profit": 20000.00,
+    "createdAt": "2024-03-18T12:00:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0031sale0000032",
+    "productId": "clh8x2k3n0005qwerty123456",
+    "customerId": "clh8y5m2p0001customer002",
+    "quantity": 1,
+    "unitPrice": 249.99,
+    "totalAmount": 249.99,
+    "profit": 70.00,
+    "createdAt": "2024-03-20T14:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0032sale0000033",
+    "productId": "clh8x2k3n0006qwerty123456",
+    "customerId": "clh8y5m2p0002customer003",
+    "quantity": 1,
+    "unitPrice": 349.99,
+    "totalAmount": 349.99,
+    "profit": 100.00,
+    "createdAt": "2024-03-22T11:30:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0033sale0000034",
+    "productId": "clh8x2k3n0028qwerty123456",
+    "customerId": "clh8y5m2p0003customer004",
+    "quantity": 1,
+    "unitPrice": 2495.99,
+    "totalAmount": 2495.99,
+    "profit": 696.00,
+    "createdAt": "2024-03-24T16:45:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0034sale0000035",
+    "productId": "clh8x2k3n0022qwerty123456",
+    "customerId": "clh8y5m2p0004customer005",
+    "quantity": 5,
+    "unitPrice": 49.99,
+    "totalAmount": 249.95,
+    "profit": 100.00,
+    "createdAt": "2024-03-26T09:15:00.000Z"
+  },
+  {
+    "saleId": "clh9a3o5r0035sale0000036",
+    "productId": "clh8x2k3n0023qwerty123456",
+    "customerId": "clh8y5m2p0005customer006",
+    "quantity": 3,
+    "unitPrice": 99.99,
+    "totalAmount": 299.97,
+    "profit": 120.00,
+    "createdAt": "2024-03-28T13:45:00.000Z"
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "inventory_1",
+    "totalProducts": 2,
+    "stockValue": 9500.0,
+    "lowStockItems": 1,
+    "createdAt": "2025-08-24T14:00:00.000Z"
+  }
+]

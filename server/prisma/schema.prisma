@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  adminId   String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Products {
+  productId     String   @id @default(cuid())
+  name          String
+  costPrice     Float      // qiimaha aad ku soo iibsatay
+  price         Float      // qiimaha iibka
+  stockQuantity Int @default(0)
+  purchases     Purchases[]
+  sales        Sales[]
+}
+
+model Purchases {
+  purchaseId String   @id @default(cuid())
+  productId  String
+  quantity   Int
+  unitCost   Float
+  totalCost  Float
+  createdAt  DateTime @default(now())
+  product    Products @relation(fields: [productId], references: [productId])
+}
+
+model Customers {
+  customerId String   @id @default(cuid())
+  name       String
+  phone      String?
+  address    String?
+  sales     Sales[]
+}
+
+
+model Sales {
+  saleId      String   @id @default(cuid())
+  productId   String
+  customerId  String
+  quantity    Int
+  unitPrice   Float
+  totalAmount Float
+  profit      Float      // (unitPrice - costPrice) * quantity
+  createdAt   DateTime @default(now())
+
+  product     Products  @relation(fields: [productId], references: [productId])
+  customer    Customers  @relation(fields: [customerId], references: [customerId])
+}
+
+//
+// ---------- DASHBOARD SUMMARY MODELS ----------
+//
+
+// For Sales Performance Card
+model SalesSummary {
+  id              String   @id @default(cuid())
+  totalRevenue    Float    // SUM of Sale.totalAmount
+  totalProfit     Float    // SUM of Sale.profit
+  salesCount      Int      // COUNT of Sale
+  changePercent   Float?   // percentage change vs last period
+  createdAt       DateTime @default(now())
+}
+
+// For Inventory Overview Card
+model InventorySummary {
+  id              String   @id @default(cuid())
+  totalProducts   Int      // COUNT of Products
+  stockValue      Float    // SUM(price * stockQuantity)
+  lowStockItems   Int      // COUNT where stockQuantity < threshold
+  createdAt       DateTime @default(now())
+}
+
+// For Customer Insights Card
+model CustomerSummary {
+  id                String   @id @default(cuid())
+  totalCustomers    Int      // COUNT(Customer)
+  newCustomers      Int      // Customers added in period
+  repeatCustomers   Int      // Customers with >1 Sale
+  changePercent     Float?   // percentage change vs last period
+  createdAt         DateTime @default(now())
+}

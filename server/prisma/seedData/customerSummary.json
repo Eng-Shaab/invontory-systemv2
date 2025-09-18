@@ -1,0 +1,10 @@
+[
+  {
+    "id": "customerSummary_1",
+    "totalCustomers": 2,
+    "newCustomers": 1,
+    "repeatCustomers": 1,
+    "changePercent": 50.0,
+    "createdAt": "2025-08-24T14:00:00.000Z"
+  }
+]

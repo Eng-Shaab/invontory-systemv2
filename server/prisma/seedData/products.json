@@ -1,0 +1,212 @@
+[
+  {
+    "productId": "clh8x2k3n0000qwerty123456",
+    "name": "Samsung Galaxy S24 Ultra",
+    "costPrice": 899.99,
+    "price": 1199.99,
+    "stockQuantity": 45
+  },
+  {
+    "productId": "clh8x2k3n0001qwerty123456",
+    "name": "iPhone 15 Pro Max",
+    "costPrice": 999.99,
+    "price": 1299.99,
+    "stockQuantity": 32
+  },
+  {
+    "productId": "clh8x2k3n0002qwerty123456",
+    "name": "MacBook Air M3",
+    "costPrice": 999.99,
+    "price": 1299.99,
+    "stockQuantity": 18
+  },
+  {
+    "productId": "clh8x2k3n0003qwerty123456",
+    "name": "Dell XPS 13",
+    "costPrice": 799.99,
+    "price": 1099.99,
+    "stockQuantity": 25
+  },
+  {
+    "productId": "clh8x2k3n0004qwerty123456",
+    "name": "iPad Pro 12.9",
+    "costPrice": 749.99,
+    "price": 999.99,
+    "stockQuantity": 38
+  },
+  {
+    "productId": "clh8x2k3n0005qwerty123456",
+    "name": "AirPods Pro 2",
+    "costPrice": 179.99,
+    "price": 249.99,
+    "stockQuantity": 67
+  },
+  {
+    "productId": "clh8x2k3n0006qwerty123456",
+    "name": "Sony WH-1000XM5",
+    "costPrice": 249.99,
+    "price": 349.99,
+    "stockQuantity": 42
+  },
+  {
+    "productId": "clh8x2k3n0007qwerty123456",
+    "name": "Nintendo Switch OLED",
+    "costPrice": 279.99,
+    "price": 349.99,
+    "stockQuantity": 29
+  },
+  {
+    "productId": "clh8x2k3n0008qwerty123456",
+    "name": "PlayStation 5",
+    "costPrice": 399.99,
+    "price": 499.99,
+    "stockQuantity": 8
+  },
+  {
+    "productId": "clh8x2k3n0009qwerty123456",
+    "name": "Xbox Series X",
+    "costPrice": 399.99,
+    "price": 499.99,
+    "stockQuantity": 12
+  },
+  {
+    "productId": "clh8x2k3n0010qwerty123456",
+    "name": "Apple Watch Series 9",
+    "costPrice": 299.99,
+    "price": 399.99,
+    "stockQuantity": 55
+  },
+  {
+    "productId": "clh8x2k3n0011qwerty123456",
+    "name": "Samsung Galaxy Watch 6",
+    "costPrice": 199.99,
+    "price": 299.99,
+    "stockQuantity": 34
+  },
+  {
+    "productId": "clh8x2k3n0012qwerty123456",
+    "name": "Google Pixel 8 Pro",
+    "costPrice": 649.99,
+    "price": 899.99,
+    "stockQuantity": 21
+  },
+  {
+    "productId": "clh8x2k3n0013qwerty123456",
+    "name": "Meta Quest 3",
+    "costPrice": 399.99,
+    "price": 549.99,
+    "stockQuantity": 15
+  },
+  {
+    "productId": "clh8x2k3n0014qwerty123456",
+    "name": "Surface Laptop 5",
+    "costPrice": 799.99,
+    "price": 1099.99,
+    "stockQuantity": 19
+  },
+  {
+    "productId": "clh8x2k3n0015qwerty123456",
+    "name": "HP Spectre x360",
+    "costPrice": 899.99,
+    "price": 1199.99,
+    "stockQuantity": 22
+  },
+  {
+    "productId": "clh8x2k3n0016qwerty123456",
+    "name": "Lenovo ThinkPad X1",
+    "costPrice": 1099.99,
+    "price": 1399.99,
+    "stockQuantity": 14
+  },
+  {
+    "productId": "clh8x2k3n0017qwerty123456",
+    "name": "Canon EOS R6",
+    "costPrice": 1799.99,
+    "price": 2199.99,
+    "stockQuantity": 7
+  },
+  {
+    "productId": "clh8x2k3n0018qwerty123456",
+    "name": "Sony A7 IV",
+    "costPrice": 1999.99,
+    "price": 2499.99,
+    "stockQuantity": 5
+  },
+  {
+    "productId": "clh8x2k3n0019qwerty123456",
+    "name": "DJI Mini 4 Pro",
+    "costPrice": 599.99,
+    "price": 799.99,
+    "stockQuantity": 16
+  },
+  {
+    "productId": "clh8x2k3n0020qwerty123456",
+    "name": "GoPro Hero 12",
+    "costPrice": 299.99,
+    "price": 399.99,
+    "stockQuantity": 41
+  },
+  {
+    "productId": "clh8x2k3n0021qwerty123456",
+    "name": "Kindle Oasis",
+    "costPrice": 179.99,
+    "price": 249.99,
+    "stockQuantity": 28
+  },
+  {
+    "productId": "clh8x2k3n0022qwerty123456",
+    "name": "Echo Dot (5th Gen)",
+    "costPrice": 29.99,
+    "price": 49.99,
+    "stockQuantity": 89
+  },
+  {
+    "productId": "clh8x2k3n0023qwerty123456",
+    "name": "Google Nest Hub",
+    "costPrice": 59.99,
+    "price": 99.99,
+    "stockQuantity": 73
+  },
+  {
+    "productId": "clh8x2k3n0024qwerty123456",
+    "name": "Ring Video Doorbell",
+    "costPrice": 79.99,
+    "price": 129.99,
+    "stockQuantity": 36
+  },
+  {
+    "productId": "clh8x2k3n0025qwerty123456",
+    "name": "Tesla Model S Plaid",
+    "costPrice": 89999.99,
+    "price": 109999.99,
+    "stockQuantity": 2
+  },
+  {
+    "productId": "clh8x2k3n0026qwerty123456",
+    "name": "Dyson V15 Detect",
+    "costPrice": 549.99,
+    "price": 749.99,
+    "stockQuantity": 13
+  },
+  {
+    "productId": "clh8x2k3n0027qwerty123456",
+    "name": "Roomba j7+",
+    "costPrice": 599.99,
+    "price": 799.99,
+    "stockQuantity": 11
+  },
+  {
+    "productId": "clh8x2k3n0028qwerty123456",
+    "name": "Peloton Bike+",
+    "costPrice": 1799.99,
+    "price": 2495.99,
+    "stockQuantity": 4
+  },
+  {
+    "productId": "clh8x2k3n0029qwerty123456",
+    "name": "Fitbit Charge 6",
+    "costPrice": 119.99,
+    "price": 159.99,
+    "stockQuantity": 64
+  }
+]
