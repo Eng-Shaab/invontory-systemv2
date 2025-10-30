@@ -57,7 +57,7 @@ const Sidebar = () => {
         >
           <span className="text-white font-bold text-lg">E</span>
         </div>
-        <h1 className={`${isSidebarCollapsed ? "hidden" : "block"} font-extrabold text-2xl`}>EDSTOCK</h1>
+        <h1 className={`${isSidebarCollapsed ? "hidden" : "block"} font-extrabold text-2xl`}>SANABIL</h1>
 
         <button className="md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100" onClick={toggleSidebar}>
           <Menu className="w-4 h-4" />
@@ -76,7 +76,7 @@ const Sidebar = () => {
 
       {/* FOOTER */}
       <div className={`${isSidebarCollapsed ? "hidden" : "block"} mb-10`}>
-        <p className="text-center text-xs text-gray-500">&copy; 2025 Edstock</p>
+        <p className="text-center text-xs text-gray-500">&copy; 2025 SANABIL</p>
       </div>
     </div>
   )
