@@ -1,9 +1,9 @@
 [
   {
     "id": "inventory_1",
-    "totalProducts": 2,
-    "stockValue": 9500.0,
+    "totalProducts": 5,
+    "stockValue": 6689.12,
     "lowStockItems": 1,
-    "createdAt": "2025-08-24T14:00:00.000Z"
+    "createdAt": "2024-05-15T08:00:00.000Z"
   }
 ]

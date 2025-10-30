@@ -1,182 +1,32 @@
 [
   {
-    "customerId": "clh8y5m2p0000customer001",
-    "name": "Ahmed Hassan",
-    "phone": "+252 61 234 5678",
-    "address": "Wadada Makka Al-Mukarama, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0001customer002",
-    "name": "Fatima Mohamed",
-    "phone": "+252 63 987 6543",
+    "customerId": "cust-amina",
+    "name": "Amina Ali",
+    "phone": "+252 61 200 3344",
     "address": "Hodan District, Mogadishu"
   },
   {
-    "customerId": "clh8y5m2p0002customer003",
-    "name": "Omar Ali",
-    "phone": "+252 65 456 7890",
-    "address": "Karaan District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0003customer004",
-    "name": "Amina Abdi",
-    "phone": "+252 67 123 4567",
-    "address": "Daynile District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0004customer005",
-    "name": "Abdirahman Yusuf",
-    "phone": "+252 69 789 0123",
-    "address": "Waberi District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0005customer006",
-    "name": "Khadija Ibrahim",
-    "phone": "+252 61 345 6789",
-    "address": "Shangani District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0006customer007",
-    "name": "Mohamed Nur",
-    "phone": "+252 63 567 8901",
-    "address": "Hamar Jajab District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0007customer008",
+    "customerId": "cust-sahra",
     "name": "Sahra Hussein",
-    "phone": "+252 65 678 9012",
-    "address": "Shibis District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0008customer009",
-    "name": "Ali Ahmed",
-    "phone": "+252 67 890 1234",
-    "address": "Bondhere District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0009customer010",
-    "name": "Halima Omar",
-    "phone": "+252 69 012 3456",
-    "address": "Hamar Weyne District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0010customer011",
-    "name": "Hassan Abdi",
-    "phone": "+252 61 234 5678",
-    "address": "Dharkenley District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0011customer012",
-    "name": "Asma Mohamed",
-    "phone": "+252 63 456 7890",
-    "address": "Kahda District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0012customer013",
-    "name": "Ibrahim Farah",
-    "phone": "+252 65 678 9012",
-    "address": "Yaqshid District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0013customer014",
-    "name": "Maryan Hassan",
-    "phone": "+252 67 890 1234",
-    "address": "Abdiaziz District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0014customer015",
-    "name": "Abdullahi Said",
-    "phone": "+252 69 012 3456",
+    "phone": "+252 63 155 7788",
     "address": "Wadajir District, Mogadishu"
   },
   {
-    "customerId": "clh8y5m2p0015customer016",
-    "name": "Farhiya Ali",
-    "phone": "+252 61 345 6789",
+    "customerId": "cust-farhia",
+    "name": "Farhia Ibrahim",
+    "phone": "+252 65 411 8899",
+    "address": "Kahda District, Mogadishu"
+  },
+  {
+    "customerId": "cust-naima",
+    "name": "Naima Yusuf",
+    "phone": "+252 67 233 4455",
     "address": "Howlwadag District, Mogadishu"
   },
   {
-    "customerId": "clh8y5m2p0016customer017",
-    "name": "Yusuf Ibrahim",
-    "phone": "+252 63 567 8901",
-    "address": "Wardhigley District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0017customer018",
-    "name": "Suad Ahmed",
-    "phone": "+252 65 789 0123",
-    "address": "Medina District, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0018customer019",
-    "name": "Abdi Jama",
-    "phone": "+252 67 901 2345",
-    "address": "KM4, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0019customer020",
-    "name": "Naima Hussein",
-    "phone": "+252 69 123 4567",
-    "address": "Industrial Road, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0020customer021",
-    "name": "Said Omar",
-    "phone": "+252 61 456 7890",
-    "address": "Bakara Market, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0021customer022",
-    "name": "Zahra Mohamed",
-    "phone": "+252 63 678 9012",
-    "address": "Villa Somalia Road, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0022customer023",
-    "name": "Farah Abdi",
-    "phone": "+252 65 890 1234",
-    "address": "Lido Beach, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0023customer024",
-    "name": "Hawa Ali",
-    "phone": "+252 67 012 3456",
-    "address": "Afrik Hotel Area, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0024customer025",
-    "name": "Jama Hassan",
-    "phone": "+252 69 234 5678",
-    "address": "Aden Adde Airport Road, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0025customer026",
-    "name": "Asha Ibrahim",
-    "phone": "+252 61 567 8901",
-    "address": "Banaadir University Area, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0026customer027",
-    "name": "Mahad Yusuf",
-    "phone": "+252 63 789 0123",
-    "address": "Digfeer Hospital Area, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0027customer028",
-    "name": "Sahra Farah",
-    "phone": "+252 65 901 2345",
-    "address": "General Kahiye Police Station Area"
-  },
-  {
-    "customerId": "clh8y5m2p0028customer029",
-    "name": "Hussein Mohamed",
-    "phone": "+252 67 123 4567",
-    "address": "Peace Garden Hotel Area, Mogadishu"
-  },
-  {
-    "customerId": "clh8y5m2p0029customer030",
-    "name": "Caasho Ali",
-    "phone": "+252 69 345 6789",
-    "address": "Hayat Hotel Area, Mogadishu"
+    "customerId": "cust-hodan",
+    "name": "Hodan Mohamed",
+    "phone": "+252 69 677 8899",
+    "address": "Shangani District, Mogadishu"
   }
 ]

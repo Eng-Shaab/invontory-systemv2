@@ -1,37 +1,37 @@
 [
   {
-    "productId": "clh8x2k3n0030qwerty123456",
+    "productId": "prod-handbag",
     "name": "Leather Handbag",
-    "costPrice": 49.99,
+    "costPrice": 45.0,
     "price": 79.99,
-    "stockQuantity": 25
-  },
-  {
-    "productId": "clh8x2k3n0031qwerty123456",
-    "name": "Evening Dress",
-    "costPrice": 89.99,
-    "price": 129.99,
-    "stockQuantity": 15
-  },
-  {
-    "productId": "clh8x2k3n0032qwerty123456",
-    "name": "High Heels",
-    "costPrice": 39.99,
-    "price": 59.99,
-    "stockQuantity": 30
-  },
-  {
-    "productId": "clh8x2k3n0033qwerty123456",
-    "name": "Designer Perfume",
-    "costPrice": 59.99,
-    "price": 99.99,
     "stockQuantity": 20
   },
   {
-    "productId": "clh8x2k3n0034qwerty123456",
+    "productId": "prod-evening-dress",
+    "name": "Evening Dress",
+    "costPrice": 60.0,
+    "price": 149.99,
+    "stockQuantity": 6
+  },
+  {
+    "productId": "prod-high-heels",
+    "name": "High Heels",
+    "costPrice": 35.0,
+    "price": 89.99,
+    "stockQuantity": 15
+  },
+  {
+    "productId": "prod-signature-perfume",
+    "name": "Signature Perfume",
+    "costPrice": 55.0,
+    "price": 119.99,
+    "stockQuantity": 12
+  },
+  {
+    "productId": "prod-silk-scarf",
     "name": "Silk Scarf",
-    "costPrice": 19.99,
-    "price": 29.99,
-    "stockQuantity": 40
+    "costPrice": 15.0,
+    "price": 39.99,
+    "stockQuantity": 35
   }
 ]
