@@ -3,7 +3,8 @@
 import React, { useEffect } from 'react'
 import Navbar from "@/app/(components)/Navbar";
 import Sidebar from "@/app/(components)/Sidebar";
-import StoreProvider, { useAppSelector } from './redux';
+import { useAppSelector } from './redux';
+import { usePathname } from 'next/navigation';
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isSidebarCollapsed = useAppSelector(
@@ -39,11 +40,43 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 }
 
 const DashboardWrapper = ({ children }: { children: React.ReactNode}) => {
-  return (
-    <StoreProvider>
-     <DashboardLayout>{children}</DashboardLayout>
-    </StoreProvider>
-  ) 
+  return <DashboardLayout>{children}</DashboardLayout>
 }
 
 export default DashboardWrapper
+
+// Single place wrapper that decides when to show the dashboard chrome
+export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+
+  if (!pathname) return <>{children}</>;
+
+  // Never show dashboard chrome on auth routes
+  if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
+    return <>{children}</>;
+  }
+
+  // Routes that should show the dashboard layout
+  const dashboardBases = [
+    '/',
+    '/dashboard',
+    '/customers',
+    '/products',
+    '/inventory',
+    '/sales',
+    '/purchases',
+    '/settings',
+    '/test',
+  ];
+
+  const shouldWrap = dashboardBases.some((base) => {
+    if (base === '/') return pathname === '/';
+    return pathname === base || pathname.startsWith(base + '/');
+  });
+
+  if (shouldWrap) {
+    return <DashboardWrapper>{children}</DashboardWrapper>;
+  }
+
+  return <>{children}</>;
+}
