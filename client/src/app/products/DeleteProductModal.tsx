@@ -17,7 +17,7 @@ const DeleteProductModal = ({ isOpen, onClose, onConfirm, productName }: DeleteP
         <Header name="Delete Product" />
         <div className="mt-5">
           <p className="text-gray-700 mb-4">
-            Are you sure you want to delete "{productName}"? This action cannot be undone.
+            Are you sure you want to delete &quot;{productName}&quot;? This action cannot be undone.
           </p>
           <div className="flex justify-end gap-2">
             <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700">

@@ -18,7 +18,7 @@ const DeleteCustomerModal = ({ isOpen, onClose, onConfirm, customerName }: Delet
         <Header name="Delete Customer" />
         <div className="mt-5">
           <p className="text-gray-700 mb-4">
-            Are you sure you want to delete customer "{customerName}"? This action cannot be undone and will also remove
+            Are you sure you want to delete customer &quot;{customerName}&quot;? This action cannot be undone and will also remove
             all associated sales records.
           </p>
           <div className="flex justify-end gap-2">
