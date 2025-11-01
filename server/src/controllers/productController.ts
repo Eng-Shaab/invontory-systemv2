@@ -96,9 +96,11 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
   try {
     const { id } = req.params
 
-    await prisma.products.delete({
-      where: { productId: id },
-    })
+    await prisma.$transaction([
+      prisma.sales.deleteMany({ where: { productId: id } }),
+      prisma.purchases.deleteMany({ where: { productId: id } }),
+      prisma.products.delete({ where: { productId: id } }),
+    ])
 
     res.status(204).send()
   } catch (error) {
