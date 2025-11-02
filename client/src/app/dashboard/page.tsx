@@ -52,7 +52,7 @@ const Dashboard = () => {
   // Customers calculations
   const totalCustomers = customers.length
   const newCustomers = customers.filter((c) => {
-    const createdDate = new Date(c.createdAt)
+    const createdDate = new Date()
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
     return createdDate > thirtyDaysAgo
