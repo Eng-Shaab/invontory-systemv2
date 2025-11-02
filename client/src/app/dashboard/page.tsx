@@ -36,6 +36,15 @@ const Dashboard = () => {
   const { salesSummary, inventorySummary, customerSummary, topProducts, recentSales, recentPurchases } =
     dashboardMetrics
 
+  console.log("[v0] dashboardMetrics:", dashboardMetrics)
+  console.log("[v0] salesSummary:", salesSummary)
+  console.log("[v0] inventorySummary:", inventorySummary)
+  console.log("[v0] customerSummary:", customerSummary)
+
+  const saleSummaryData = Array.isArray(salesSummary) ? salesSummary[0] : salesSummary
+  const inventorySummaryData = Array.isArray(inventorySummary) ? inventorySummary[0] : inventorySummary
+  const customerSummaryData = Array.isArray(customerSummary) ? customerSummary[0] : customerSummary
+
   const salesChartData =
     recentSales?.slice(0, 7).map((sale, index) => ({
       name: `Day ${index + 1}`,
@@ -51,8 +60,8 @@ const Dashboard = () => {
     })) || []
 
   const customerChartData = [
-    { name: "New", value: customerSummary?.[0]?.newCustomers || 0, color: "#8884d8" },
-    { name: "Repeat", value: customerSummary?.[0]?.repeatCustomers || 0, color: "#82ca9d" },
+    { name: "New", value: customerSummaryData?.newCustomers || 0, color: "#8884d8" },
+    { name: "Repeat", value: customerSummaryData?.repeatCustomers || 0, color: "#82ca9d" },
   ]
 
   const purchaseChartData =
@@ -75,14 +84,16 @@ const Dashboard = () => {
       {/* SUMMARY CARDS WITH CHARTS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Sales Summary with Chart */}
-        {salesSummary?.[0] && (
+        {saleSummaryData && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">${salesSummary[0].totalRevenue.toFixed(2)}</p>
-                <p className="text-sm text-gray-600">Profit: ${salesSummary[0].totalProfit.toFixed(2)}</p>
-                <p className="text-sm text-gray-600">Sales: {salesSummary[0].salesCount}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  ${saleSummaryData.totalRevenue?.toFixed(2) || "0.00"}
+                </p>
+                <p className="text-sm text-gray-600">Profit: ${saleSummaryData.totalProfit?.toFixed(2) || "0.00"}</p>
+                <p className="text-sm text-gray-600">Sales: {saleSummaryData.salesCount || 0}</p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-600" />
             </div>
@@ -98,14 +109,16 @@ const Dashboard = () => {
         )}
 
         {/* Inventory Summary with Chart */}
-        {inventorySummary?.[0] && (
+        {inventorySummaryData && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Products</p>
-                <p className="text-2xl font-bold text-gray-900">{inventorySummary[0].totalProducts}</p>
-                <p className="text-sm text-gray-600">Stock Value: ${inventorySummary[0].stockValue.toFixed(2)}</p>
-                <p className="text-sm text-red-600">Low Stock: {inventorySummary[0].lowStockItems}</p>
+                <p className="text-2xl font-bold text-gray-900">{inventorySummaryData.totalProducts || 0}</p>
+                <p className="text-sm text-gray-600">
+                  Stock Value: ${inventorySummaryData.stockValue?.toFixed(2) || "0.00"}
+                </p>
+                <p className="text-sm text-red-600">Low Stock: {inventorySummaryData.lowStockItems || 0}</p>
               </div>
               <Package className="h-8 w-8 text-blue-600" />
             </div>
@@ -121,14 +134,14 @@ const Dashboard = () => {
         )}
 
         {/* Customer Summary with Chart */}
-        {customerSummary?.[0] && (
+        {customerSummaryData && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Customers</p>
-                <p className="text-2xl font-bold text-gray-900">{customerSummary[0].totalCustomers}</p>
-                <p className="text-sm text-gray-600">New: {customerSummary[0].newCustomers}</p>
-                <p className="text-sm text-gray-600">Repeat: {customerSummary[0].repeatCustomers}</p>
+                <p className="text-2xl font-bold text-gray-900">{customerSummaryData.totalCustomers || 0}</p>
+                <p className="text-sm text-gray-600">New: {customerSummaryData.newCustomers || 0}</p>
+                <p className="text-sm text-gray-600">Repeat: {customerSummaryData.repeatCustomers || 0}</p>
               </div>
               <Users className="h-8 w-8 text-purple-600" />
             </div>
