@@ -3,6 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/app/redux"
 import { setIsSidebarCollapsed } from "@/state"
 import { Archive, Clipboard, Layout, type LucideIcon, Menu, ShoppingCart, Truck, Users } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -52,10 +53,8 @@ const Sidebar = () => {
           isSidebarCollapsed ? "px-5" : "px-8"
         }`}
       >
-        <div
-          className={`w-8 h-8 bg-blue-500 rounded flex items-center justify-center ${isSidebarCollapsed ? "" : "mr-2"}`}
-        >
-          <span className="text-white font-bold text-lg">E</span>
+        <div className={`w-8 h-8 flex items-center justify-center ${isSidebarCollapsed ? "" : "mr-2"}`}>
+          <Image src="/logo.png" alt="SANABIL Logo" width={32} height={32} className="w-full h-full object-contain  rounded-full" />
         </div>
         <h1 className={`${isSidebarCollapsed ? "hidden" : "block"} font-extrabold text-2xl`}>SANABIL</h1>
 

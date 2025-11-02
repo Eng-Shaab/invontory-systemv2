@@ -1,7 +1,7 @@
 "use client"
 
 import { useCreateCustomerMutation, useGetCustomersQuery, useDeleteCustomerMutation } from "@/state/api"
-import { PlusCircleIcon, SearchIcon, Edit, Trash2, User } from "lucide-react"
+import { PlusCircleIcon, SearchIcon, Edit, Trash2, Users, ShoppingBag, TrendingUp } from "lucide-react"
 import { useState } from "react"
 import Header from "@/app/(components)/Header"
 import CreateCustomerModal from "./CreateCustomerModal"
@@ -45,6 +45,10 @@ const Customers = () => {
   if (isLoading) return <div className="py-4 text-center">Loading...</div>
   if (isError || !customers) return <div className="text-center text-red-500 py-4">Failed to fetch customers</div>
 
+  const totalCustomers = customers.length
+  const totalPurchases = customers.reduce((sum, customer) => sum + (customer.sales?.length || 0), 0)
+  const avgPurchasesPerCustomer = totalCustomers > 0 ? (totalPurchases / totalCustomers).toFixed(2) : "0"
+
   return (
     <div className="mx-auto pb-5 w-full">
       {/* SEARCH BAR */}
@@ -64,71 +68,101 @@ const Customers = () => {
       <div className="flex justify-between items-center mb-6">
         <Header name="Customers" />
         <button
-          className="flex items-center bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+          className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => setIsCreateModalOpen(true)}
         >
           <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Customer
         </button>
       </div>
 
-      {/* CUSTOMERS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {customers.map((customer) => (
-          <div
-            key={customer.customerId}
-            className="bg-white border shadow rounded-lg p-6 hover:shadow-lg transition-shadow"
-          >
-            <div className="flex flex-col items-center text-center">
-              {/* Customer Avatar */}
-              <div className="w-16 h-16 bg-purple-100 rounded-full mb-4 flex items-center justify-center">
-                <User className="w-8 h-8 text-purple-600" />
-              </div>
-
-              {/* Customer Info */}
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{customer.name}</h3>
-
-              <div className="space-y-1 text-sm text-gray-600 mb-4">
-                {customer.phone && (
-                  <p className="flex items-center justify-center">
-                    <span className="font-medium">Phone:</span>
-                    <span className="ml-1">{customer.phone}</span>
-                  </p>
-                )}
-                {customer.address && (
-                  <p className="flex items-center justify-center">
-                    <span className="font-medium">Address:</span>
-                    <span className="ml-1 truncate max-w-32" title={customer.address}>
-                      {customer.address}
-                    </span>
-                  </p>
-                )}
-                {customer.sales && (
-                  <p className="text-purple-600 font-medium">
-                    {customer.sales.length} purchase{customer.sales.length !== 1 ? "s" : ""}
-                  </p>
-                )}
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-2 w-full">
-                <button
-                  onClick={() => handleEditClick(customer)}
-                  className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-                >
-                  <Edit className="w-4 h-4 mr-1" />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteClick(customer)}
-                  className="flex-1 flex items-center justify-center px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Delete
-                </button>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+          <div className="flex items-center">
+            <Users className="w-8 h-8 text-blue-500 mr-3" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Customers</p>
+              <p className="text-2xl font-bold text-gray-900">{totalCustomers}</p>
             </div>
           </div>
-        ))}
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+          <div className="flex items-center">
+            <ShoppingBag className="w-8 h-8 text-green-500 mr-3" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Purchases</p>
+              <p className="text-2xl font-bold text-gray-900">{totalPurchases}</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+          <div className="flex items-center">
+            <TrendingUp className="w-8 h-8 text-purple-500 mr-3" />
+            <div>
+              <p className="text-sm font-medium text-gray-600">Avg Purchases/Customer</p>
+              <p className="text-2xl font-bold text-gray-900">{avgPurchasesPerCustomer}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Address
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Purchases
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {customers.map((customer) => (
+              <tr key={customer.customerId} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{customer.name}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{customer.phone || "N/A"}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-600 truncate max-w-xs" title={customer.address}>
+                    {customer.address || "N/A"}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="text-sm font-medium text-blue-600">
+                    {customer.sales?.length || 0} purchase{customer.sales?.length !== 1 ? "s" : ""}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditClick(customer)}
+                      className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                    >
+                      <Edit className="w-3 h-3 mr-1" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(customer)}
+                      className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                    >
+                      <Trash2 className="w-3 h-3 mr-1" />
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* MODALS */}
