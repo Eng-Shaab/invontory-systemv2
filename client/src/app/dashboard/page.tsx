@@ -6,6 +6,7 @@ import Header from "@/app/(components)/Header"
 import { useState } from "react"
 import { Button } from "@/app/(components)/ui/button"
 import InventoryReportModal from "./InventoryReportModal"
+import SalesReportModal from "./SalesReportModal"
 import {
   LineChart,
   Line,
@@ -26,7 +27,8 @@ const Dashboard = () => {
   const { data: products, isLoading: productsLoading, isError: productsError } = useGetProductsQuery()
   const { data: customers, isLoading: customersLoading, isError: customersError } = useGetCustomersQuery()
 
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [isInventoryReportModalOpen, setIsInventoryReportModalOpen] = useState(false)
+  const [isSalesReportModalOpen, setIsSalesReportModalOpen] = useState(false)
 
   const isLoading = salesLoading || productsLoading || customersLoading
   const isError = salesError || productsError || customersError
@@ -86,10 +88,22 @@ const Dashboard = () => {
     <div className="mx-auto pb-5 w-full">
       <div className="flex justify-between items-center mb-6">
         <Header name="Dashboard Overview" />
-        <Button onClick={() => setIsReportModalOpen(true)} className="flex items-center gap-2">
-          <FileText className="h-4 w-4" />
-          Generate Report
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setIsInventoryReportModalOpen(true)}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+          >
+            <FileText className="h-4 w-4" />
+            Inventory Report
+          </Button>
+          <Button
+            onClick={() => setIsSalesReportModalOpen(true)}
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+          >
+            <FileText className="h-4 w-4" />
+            Sales Report
+          </Button>
+        </div>
       </div>
 
       {/* SUMMARY CARDS WITH CHARTS */}
@@ -264,7 +278,8 @@ const Dashboard = () => {
         </div>
       )}
 
-      <InventoryReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
+      <InventoryReportModal isOpen={isInventoryReportModalOpen} onClose={() => setIsInventoryReportModalOpen(false)} />
+      <SalesReportModal isOpen={isSalesReportModalOpen} onClose={() => setIsSalesReportModalOpen(false)} />
     </div>
   )
 }
