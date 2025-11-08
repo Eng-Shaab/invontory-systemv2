@@ -6,6 +6,7 @@ import { Archive, Clipboard, Layout, type LucideIcon, Menu, ShoppingCart, Truck,
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
 
 interface SidebarLinkProps {
   href: string
@@ -36,6 +37,8 @@ const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: SidebarLinkProps)
 const Sidebar = () => {
   const dispatch = useAppDispatch()
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed)
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
 
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed))
@@ -71,7 +74,7 @@ const Sidebar = () => {
         <SidebarLink href="/customers" icon={Users} label="Customers" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/sales" icon={ShoppingCart} label="Sales" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/inventory" icon={Archive} label="Inventory" isCollapsed={isSidebarCollapsed} />
-  <SidebarLink href="/users" icon={UserCog} label="Users" isCollapsed={isSidebarCollapsed} />
+        {isAdmin && <SidebarLink href="/users" icon={UserCog} label="Users" isCollapsed={isSidebarCollapsed} />}
       </div>
 
       {/* FOOTER */}

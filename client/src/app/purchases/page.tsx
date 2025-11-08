@@ -12,6 +12,7 @@ import Header from "@/app/(components)/Header"
 import CreatePurchaseModal from "./CreatePurchaseModal"
 import EditPurchaseModal from "./EditPurchaseModal"
 import DeletePurchaseModal from "./DeletePurchaseModal"
+import { useAuth } from "@/context/AuthContext"
 
 const Purchases = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -22,24 +23,31 @@ const Purchases = () => {
   const { data: purchases, isLoading, isError } = useGetPurchasesQuery()
   const { data: products } = useGetProductsQuery()
 
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
+
   const [createPurchase] = useCreatePurchaseMutation()
   const [deletePurchase] = useDeletePurchaseMutation()
 
   const handleCreatePurchase = async (purchaseData: any) => {
+    if (!isAdmin) return
     await createPurchase(purchaseData)
   }
 
   const handleEditClick = (purchase: any) => {
+    if (!isAdmin) return
     setSelectedPurchase(purchase)
     setIsEditModalOpen(true)
   }
 
   const handleDeleteClick = (purchase: any) => {
+    if (!isAdmin) return
     setSelectedPurchase(purchase)
     setIsDeleteModalOpen(true)
   }
 
   const handleDeleteConfirm = async () => {
+    if (!isAdmin) return
     if (selectedPurchase) {
       await deletePurchase(selectedPurchase.purchaseId)
       setIsDeleteModalOpen(false)
@@ -55,12 +63,14 @@ const Purchases = () => {
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <Header name="Purchases" />
-        <button
-          className="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Purchase
-        </button>
+        {isAdmin && (
+          <button
+            className="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Purchase
+          </button>
+        )}
       </div>
 
       {/* PURCHASES TABLE */}
@@ -81,9 +91,11 @@ const Purchases = () => {
                 Total Cost
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+              {isAdmin && (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -105,24 +117,26 @@ const Purchases = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(purchase.createdAt).toLocaleDateString()}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditClick(purchase)}
-                      className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
-                    >
-                      <Edit className="w-3 h-3 mr-1" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(purchase)}
-                      className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
-                    >
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
+                {isAdmin && (
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditClick(purchase)}
+                        className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                      >
+                        <Edit className="w-3 h-3 mr-1" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(purchase)}
+                        className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                      >
+                        <Trash2 className="w-3 h-3 mr-1" />
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -130,30 +144,34 @@ const Purchases = () => {
       </div>
 
       {/* MODALS */}
-      <CreatePurchaseModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreate={handleCreatePurchase}
-        products={products || []}
-      />
-      <EditPurchaseModal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false)
-          setSelectedPurchase(null)
-        }}
-        purchase={selectedPurchase}
-        products={products || []}
-      />
-      <DeletePurchaseModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false)
-          setSelectedPurchase(null)
-        }}
-        onConfirm={handleDeleteConfirm}
-        purchaseId={selectedPurchase?.purchaseId}
-      />
+      {isAdmin && (
+        <>
+          <CreatePurchaseModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onCreate={handleCreatePurchase}
+            products={products || []}
+          />
+          <EditPurchaseModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false)
+              setSelectedPurchase(null)
+            }}
+            purchase={selectedPurchase}
+            products={products || []}
+          />
+          <DeletePurchaseModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false)
+              setSelectedPurchase(null)
+            }}
+            onConfirm={handleDeleteConfirm}
+            purchaseId={selectedPurchase?.purchaseId}
+          />
+        </>
+      )}
     </div>
   )
 }

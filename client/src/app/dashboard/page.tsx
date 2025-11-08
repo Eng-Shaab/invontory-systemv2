@@ -7,6 +7,7 @@ import { useState } from "react"
 import { Button } from "@/app/(components)/ui/button"
 import InventoryReportModal from "./InventoryReportModal"
 import SalesReportModal from "./SalesReportModal"
+import { useAuth } from "@/context/AuthContext"
 import {
   LineChart,
   Line,
@@ -30,6 +31,9 @@ const Dashboard = () => {
   const [isInventoryReportModalOpen, setIsInventoryReportModalOpen] = useState(false)
   const [isSalesReportModalOpen, setIsSalesReportModalOpen] = useState(false)
 
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
+
   const isLoading = salesLoading || productsLoading || customersLoading
   const isError = salesError || productsError || customersError
 
@@ -43,7 +47,7 @@ const Dashboard = () => {
 
   // Sales calculations
   const totalRevenue = sales.reduce((sum, sale) => sum + sale.totalAmount, 0)
-  const totalProfit = sales.reduce((sum, sale) => sum + sale.profit, 0)
+  const totalProfit = isAdmin ? sales.reduce((sum, sale) => sum + (sale.profit ?? 0), 0) : null
   const salesCount = sales.length
 
   // Products calculations
@@ -96,13 +100,15 @@ const Dashboard = () => {
             <FileText className="h-4 w-4" />
             Inventory Report
           </Button>
-          <Button
-            onClick={() => setIsSalesReportModalOpen(true)}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-          >
-            <FileText className="h-4 w-4" />
-            Sales Report
-          </Button>
+          {isAdmin && (
+            <Button
+              onClick={() => setIsSalesReportModalOpen(true)}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+            >
+              <FileText className="h-4 w-4" />
+              Sales Report
+            </Button>
+          )}
         </div>
       </div>
 
@@ -114,7 +120,9 @@ const Dashboard = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
               <p className="text-2xl font-bold text-gray-900">${totalRevenue.toFixed(2)}</p>
-              <p className="text-sm text-gray-600">Profit: ${totalProfit.toFixed(2)}</p>
+              {isAdmin && totalProfit !== null && (
+                <p className="text-sm text-gray-600">Profit: ${totalProfit.toFixed(2)}</p>
+              )}
               <p className="text-sm text-gray-600">Sales: {salesCount}</p>
             </div>
             <TrendingUp className="h-8 w-8 text-green-600" />
@@ -279,7 +287,9 @@ const Dashboard = () => {
       )}
 
       <InventoryReportModal isOpen={isInventoryReportModalOpen} onClose={() => setIsInventoryReportModalOpen(false)} />
-      <SalesReportModal isOpen={isSalesReportModalOpen} onClose={() => setIsSalesReportModalOpen(false)} />
+      {isAdmin && (
+        <SalesReportModal isOpen={isSalesReportModalOpen} onClose={() => setIsSalesReportModalOpen(false)} />
+      )}
     </div>
   )
 }

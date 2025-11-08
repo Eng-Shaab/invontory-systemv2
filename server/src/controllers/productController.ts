@@ -19,7 +19,15 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         },
       },
     })
-    res.json(products)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? products.map((product) => ({
+          ...product,
+          sales: product.sales?.map(({ profit, ...sale }) => sale) ?? [],
+        }))
+      : products
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving products" })
   }
@@ -42,6 +50,15 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
 
     if (!product) {
       res.status(404).json({ message: "Product not found" })
+      return
+    }
+
+    if (req.user?.role !== "ADMIN") {
+      const redactedProduct = {
+        ...product,
+        sales: product.sales?.map(({ profit, ...sale }) => sale) ?? [],
+      }
+      res.json(redactedProduct)
       return
     }
 

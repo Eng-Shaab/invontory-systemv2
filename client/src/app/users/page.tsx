@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Header from "@/app/(components)/Header"
 import {
   type AppUser,
@@ -16,6 +16,8 @@ import { Activity, Ban, CheckCircle, Clock4, PlusCircle, RefreshCw, Search, Shie
 import CreateUserModal from "./CreateUserModal"
 import EditUserModal from "./EditUserModal"
 import DeleteUserModal from "./DeleteUserModal"
+import { useAuth } from "@/context/AuthContext"
+import { useRouter } from "next/navigation"
 
 const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("")
@@ -24,6 +26,16 @@ const UsersPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<AppUser | null>(null)
+
+  const { user, status } = useAuth()
+  const router = useRouter()
+  const isAdmin = user?.role === "ADMIN"
+
+  useEffect(() => {
+    if (status === "authenticated" && !isAdmin) {
+      router.replace("/dashboard")
+    }
+  }, [status, isAdmin, router])
 
   const queryArgs = useMemo(
     () => ({
@@ -35,8 +47,8 @@ const UsersPage = () => {
 
   const auditArgs = useMemo(() => ({ limit: 20, targetType: "USER" }), [])
 
-  const { data: users = [], isLoading, isFetching } = useGetUsersQuery(queryArgs)
-  const { data: auditLogs = [], isLoading: auditLoading } = useGetAuditLogsQuery(auditArgs)
+  const { data: users = [], isLoading, isFetching } = useGetUsersQuery(queryArgs, { skip: !isAdmin })
+  const { data: auditLogs = [], isLoading: auditLoading } = useGetAuditLogsQuery(auditArgs, { skip: !isAdmin })
 
   const [createUser] = useCreateUserMutation()
   const [updateUser] = useUpdateUserMutation()
@@ -58,6 +70,14 @@ const UsersPage = () => {
   const activeCount = users.filter((user) => user.isActive).length
   const adminCount = users.filter((user) => user.role === "ADMIN").length
   const neverLoggedIn = users.filter((user) => !user.lastLoginAt).length
+
+  if (status === "loading") {
+    return <div className="py-6 text-center">Checking permissions...</div>
+  }
+
+  if (status === "authenticated" && !isAdmin) {
+    return <div className="py-6 text-center text-red-500">You do not have permission to view this page.</div>
+  }
 
   if (isLoading) {
     return <div className="py-6 text-center">Loading users...</div>

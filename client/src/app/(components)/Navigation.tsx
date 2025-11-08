@@ -3,9 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Package, ShoppingCart, Users, DollarSign, TestTube, UserCog } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
 
 const Navigation = () => {
   const pathname = usePathname()
+
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -13,7 +17,7 @@ const Navigation = () => {
     { href: "/purchases", label: "Purchases", icon: ShoppingCart },
     { href: "/customers", label: "Customers", icon: Users },
     { href: "/sales", label: "Sales", icon: DollarSign },
-    { href: "/users", label: "Users", icon: UserCog },
+    ...(isAdmin ? [{ href: "/users", label: "Users", icon: UserCog }] : []),
     { href: "/test", label: "Test System", icon: TestTube },
   ]
 

@@ -9,7 +9,12 @@ export const getSalesSummary = async (req: Request, res: Response): Promise<void
         createdAt: 'desc',
       },
     })
-    res.json(salesSummary)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? salesSummary.map(({ totalProfit, ...summary }) => summary)
+      : salesSummary
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving sales summary" })
   }

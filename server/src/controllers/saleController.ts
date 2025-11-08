@@ -13,7 +13,12 @@ export const getSales = async (req: Request, res: Response): Promise<void> => {
         createdAt: 'desc',
       },
     })
-    res.json(sales)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? sales.map(({ profit, ...rest }) => rest)
+      : sales
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving sales" })
   }
@@ -32,6 +37,12 @@ export const getSaleById = async (req: Request, res: Response): Promise<void> =>
 
     if (!sale) {
       res.status(404).json({ message: "Sale not found" })
+      return
+    }
+
+    if (req.user?.role !== "ADMIN") {
+      const { profit, ...safeSale } = sale
+      res.json(safeSale)
       return
     }
 

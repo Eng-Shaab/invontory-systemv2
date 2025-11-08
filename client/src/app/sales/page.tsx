@@ -13,6 +13,7 @@ import Header from "@/app/(components)/Header"
 import CreateSaleModal from "./CreateSaleModal"
 import EditSaleModal from "./EditSaleModal"
 import DeleteSaleModal from "./DeleteSaleModal"
+import { useAuth } from "@/context/AuthContext"
 
 const Sales = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -23,25 +24,31 @@ const Sales = () => {
   const { data: sales, isLoading, isError } = useGetSalesQuery()
   const { data: products } = useGetProductsQuery()
   const { data: customers } = useGetCustomersQuery()
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
 
   const [createSale] = useCreateSaleMutation()
   const [deleteSale] = useDeleteSaleMutation()
 
   const handleCreateSale = async (saleData: any) => {
+    if (!isAdmin) return
     await createSale(saleData)
   }
 
   const handleEditClick = (sale: any) => {
+    if (!isAdmin) return
     setSelectedSale(sale)
     setIsEditModalOpen(true)
   }
 
   const handleDeleteClick = (sale: any) => {
+    if (!isAdmin) return
     setSelectedSale(sale)
     setIsDeleteModalOpen(true)
   }
 
   const handleDeleteConfirm = async () => {
+    if (!isAdmin) return
     if (selectedSale) {
       await deleteSale(selectedSale.saleId)
       setIsDeleteModalOpen(false)
@@ -54,23 +61,25 @@ const Sales = () => {
 
   // Calculate totals
   const totalRevenue = sales.reduce((sum, sale) => sum + sale.totalAmount, 0)
-  const totalProfit = sales.reduce((sum, sale) => sum + sale.profit, 0)
+  const totalProfit = isAdmin ? sales.reduce((sum, sale) => sum + (sale.profit ?? 0), 0) : null
 
   return (
     <div className="mx-auto pb-5 w-full">
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <Header name="Sales" />
-        <button
-          className="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          <PlusCircleIcon className="w-5 h-5 mr-2" /> Record Sale
-        </button>
+        {isAdmin && (
+          <button
+            className="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            <PlusCircleIcon className="w-5 h-5 mr-2" /> Record Sale
+          </button>
+        )}
       </div>
 
       {/* SUMMARY CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div className={`grid grid-cols-1 ${isAdmin ? "md:grid-cols-3" : "md:grid-cols-2"} gap-6 mb-6`}>
         <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
           <div className="flex items-center">
             <DollarSign className="w-8 h-8 text-green-500 mr-3" />
@@ -80,15 +89,17 @@ const Sales = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
-          <div className="flex items-center">
-            <TrendingUp className="w-8 h-8 text-blue-500 mr-3" />
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Profit</p>
-              <p className="text-2xl font-bold text-gray-900">${totalProfit.toFixed(2)}</p>
+        {isAdmin && totalProfit !== null && (
+          <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+            <div className="flex items-center">
+              <TrendingUp className="w-8 h-8 text-blue-500 mr-3" />
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Profit</p>
+                <p className="text-2xl font-bold text-gray-900">${totalProfit.toFixed(2)}</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
@@ -100,7 +111,7 @@ const Sales = () => {
             </div>
           </div>
         </div>
-      </div>
+    </div>
 
       {/* SALES TABLE */}
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -122,11 +133,15 @@ const Sales = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Total Amount
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
+              {isAdmin && (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
+              )}
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+              {isAdmin && (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -143,36 +158,44 @@ const Sales = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   ${sale.totalAmount.toFixed(2)}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`text-sm font-medium ${
-                      sale.profit > 0 ? "text-green-600" : sale.profit < 0 ? "text-red-600" : "text-gray-600"
-                    }`}
-                  >
-                    ${sale.profit.toFixed(2)}
-                  </span>
-                </td>
+                {isAdmin && (
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`text-sm font-medium ${
+                        (sale.profit ?? 0) > 0
+                          ? "text-green-600"
+                          : (sale.profit ?? 0) < 0
+                            ? "text-red-600"
+                            : "text-gray-600"
+                      }`}
+                    >
+                      ${(sale.profit ?? 0).toFixed(2)}
+                    </span>
+                  </td>
+                )}
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(sale.createdAt).toLocaleDateString()}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditClick(sale)}
-                      className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
-                    >
-                      <Edit className="w-3 h-3 mr-1" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(sale)}
-                      className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
-                    >
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
+                {isAdmin && (
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditClick(sale)}
+                        className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                      >
+                        <Edit className="w-3 h-3 mr-1" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(sale)}
+                        className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                      >
+                        <Trash2 className="w-3 h-3 mr-1" />
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -180,32 +203,36 @@ const Sales = () => {
       </div>
 
       {/* MODALS */}
-      <CreateSaleModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreate={handleCreateSale}
-        products={products || []}
-        customers={customers || []}
-      />
-      <EditSaleModal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false)
-          setSelectedSale(null)
-        }}
-        sale={selectedSale}
-        products={products || []}
-        customers={customers || []}
-      />
-      <DeleteSaleModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false)
-          setSelectedSale(null)
-        }}
-        onConfirm={handleDeleteConfirm}
-        saleId={selectedSale?.saleId}
-      />
+      {isAdmin && (
+        <>
+          <CreateSaleModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onCreate={handleCreateSale}
+            products={products || []}
+            customers={customers || []}
+          />
+          <EditSaleModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false)
+              setSelectedSale(null)
+            }}
+            sale={selectedSale}
+            products={products || []}
+            customers={customers || []}
+          />
+          <DeleteSaleModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false)
+              setSelectedSale(null)
+            }}
+            onConfirm={handleDeleteConfirm}
+            saleId={selectedSale?.saleId}
+          />
+        </>
+      )}
     </div>
   )
 }

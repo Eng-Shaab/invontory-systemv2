@@ -21,7 +21,15 @@ export const getCustomers = async (req: Request, res: Response): Promise<void> =
         },
       },
     })
-    res.json(customers)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? customers.map((customer) => ({
+          ...customer,
+          sales: customer.sales?.map(({ profit, ...sale }) => sale) ?? [],
+        }))
+      : customers
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving customers" })
   }
@@ -46,6 +54,15 @@ export const getCustomerById = async (req: Request, res: Response): Promise<void
 
     if (!customer) {
       res.status(404).json({ message: "Customer not found" })
+      return
+    }
+
+    if (req.user?.role !== "ADMIN") {
+      const safeCustomer = {
+        ...customer,
+        sales: customer.sales?.map(({ profit, ...sale }) => sale) ?? [],
+      }
+      res.json(safeCustomer)
       return
     }
 

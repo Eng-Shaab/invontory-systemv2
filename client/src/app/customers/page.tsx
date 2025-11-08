@@ -7,6 +7,7 @@ import Header from "@/app/(components)/Header"
 import CreateCustomerModal from "./CreateCustomerModal"
 import EditCustomerModal from "./EditCustomerModal"
 import DeleteCustomerModal from "./DeleteCustomerModal"
+import { useAuth } from "@/context/AuthContext"
 
 const Customers = () => {
   const [searchTerm, setSearchTerm] = useState("")
@@ -17,24 +18,31 @@ const Customers = () => {
 
   const { data: customers, isLoading, isError } = useGetCustomersQuery(searchTerm)
 
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
+
   const [createCustomer] = useCreateCustomerMutation()
   const [deleteCustomer] = useDeleteCustomerMutation()
 
   const handleCreateCustomer = async (customerData: any) => {
+    if (!isAdmin) return
     await createCustomer(customerData)
   }
 
   const handleEditClick = (customer: any) => {
+    if (!isAdmin) return
     setSelectedCustomer(customer)
     setIsEditModalOpen(true)
   }
 
   const handleDeleteClick = (customer: any) => {
+    if (!isAdmin) return
     setSelectedCustomer(customer)
     setIsDeleteModalOpen(true)
   }
 
   const handleDeleteConfirm = async () => {
+    if (!isAdmin) return
     if (selectedCustomer) {
       await deleteCustomer(selectedCustomer.customerId)
       setIsDeleteModalOpen(false)
@@ -67,12 +75,14 @@ const Customers = () => {
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <Header name="Customers" />
-        <button
-          className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Customer
-        </button>
+        {isAdmin && (
+          <button
+            className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Customer
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -117,9 +127,11 @@ const Customers = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Purchases
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+              {isAdmin && (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -141,24 +153,26 @@ const Customers = () => {
                     {customer.sales?.length || 0} purchase{customer.sales?.length !== 1 ? "s" : ""}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditClick(customer)}
-                      className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
-                    >
-                      <Edit className="w-3 h-3 mr-1" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(customer)}
-                      className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
-                    >
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      Delete
-                    </button>
-                  </div>
-                </td>
+                {isAdmin && (
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditClick(customer)}
+                        className="flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                      >
+                        <Edit className="w-3 h-3 mr-1" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(customer)}
+                        className="flex items-center px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                      >
+                        <Trash2 className="w-3 h-3 mr-1" />
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -166,28 +180,32 @@ const Customers = () => {
       </div>
 
       {/* MODALS */}
-      <CreateCustomerModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreate={handleCreateCustomer}
-      />
-      <EditCustomerModal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false)
-          setSelectedCustomer(null)
-        }}
-        customer={selectedCustomer}
-      />
-      <DeleteCustomerModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false)
-          setSelectedCustomer(null)
-        }}
-        onConfirm={handleDeleteConfirm}
-        customerName={selectedCustomer?.name}
-      />
+      {isAdmin && (
+        <>
+          <CreateCustomerModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onCreate={handleCreateCustomer}
+          />
+          <EditCustomerModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false)
+              setSelectedCustomer(null)
+            }}
+            customer={selectedCustomer}
+          />
+          <DeleteCustomerModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false)
+              setSelectedCustomer(null)
+            }}
+            onConfirm={handleDeleteConfirm}
+            customerName={selectedCustomer?.name}
+          />
+        </>
+      )}
     </div>
   )
 }

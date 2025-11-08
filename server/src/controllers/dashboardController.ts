@@ -1,5 +1,6 @@
 import type { Request, Response } from "express"
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma"
+
 export const getDashboardMetrics = async (req: Request, res: Response): Promise<void> => {
   try {
     // Get all dashboard data in parallel
@@ -48,12 +49,29 @@ export const getDashboardMetrics = async (req: Request, res: Response): Promise<
       }),
     ])
 
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+
+    const sanitizedSalesSummary = shouldRedactProfit
+      ? salesSummary.map(({ totalProfit, ...summary }) => summary)
+      : salesSummary
+
+    const sanitizedRecentSales = shouldRedactProfit
+      ? recentSales.map(({ profit, ...sale }) => sale)
+      : recentSales
+
+    const sanitizedTopProducts = shouldRedactProfit
+      ? topProducts.map((product) => ({
+          ...product,
+          sales: product.sales?.map(({ profit, ...sale }) => sale) ?? [],
+        }))
+      : topProducts
+
     const dashboardMetrics = {
-      salesSummary,
+      salesSummary: sanitizedSalesSummary,
       inventorySummary,
       customerSummary,
-      topProducts,
-      recentSales,
+      topProducts: sanitizedTopProducts,
+      recentSales: sanitizedRecentSales,
       recentPurchases,
     }
 

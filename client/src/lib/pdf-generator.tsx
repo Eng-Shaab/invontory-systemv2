@@ -215,7 +215,7 @@ const generateSalesHTML = (config: SalesReportConfig): string => {
   })
 
   const totalRevenue = filteredSales.reduce((sum, s) => sum + s.totalAmount, 0)
-  const totalProfit = filteredSales.reduce((sum, s) => sum + s.profit, 0)
+  const totalProfit = filteredSales.reduce((sum, s) => sum + (s.profit ?? 0), 0)
   const totalQuantity = filteredSales.reduce((sum, s) => sum + s.quantity, 0)
 
   const reportDate = new Date().toLocaleDateString("en-US", {
@@ -234,7 +234,7 @@ const generateSalesHTML = (config: SalesReportConfig): string => {
       <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">$${s.unitPrice.toFixed(2)}</td>
       <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">$${s.totalAmount.toFixed(2)}</td>
       <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">
-        <span style="color: ${s.profit > 0 ? "#10b981" : "#ef4444"}; font-weight: 500;">$${s.profit.toFixed(2)}</span>
+  <span style="color: ${(s.profit ?? 0) > 0 ? "#10b981" : "#ef4444"}; font-weight: 500;">$${(s.profit ?? 0).toFixed(2)}</span>
       </td>
       <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center; font-size: 12px;">
         ${new Date(s.createdAt).toLocaleDateString()}

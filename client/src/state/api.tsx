@@ -77,7 +77,7 @@ export interface Sale {
   quantity: number
   unitPrice: number
   totalAmount: number
-  profit: number
+  profit?: number
   createdAt: string
   product?: Products
   customer?: Customer
@@ -154,7 +154,7 @@ export interface AuditLogEntry {
 export interface SalesSummary {
   id: string
   totalRevenue: number
-  totalProfit: number
+  totalProfit?: number
   salesCount: number
   changePercent?: number
   createdAt: string
