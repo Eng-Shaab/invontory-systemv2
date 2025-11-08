@@ -1,13 +1,9 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
 import type { Role } from "@prisma/client";
-import type { AuthenticatedUser } from "../types/auth";
-
-type AuthedRequest = Request & {
-  user?: AuthenticatedUser;
-};
+import type { AuthenticatedRequest } from "../types/http";
 
 export const authorizeRoles = (...roles: Role[]) => {
-  return (req: AuthedRequest, res: Response, next: NextFunction) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const user = req.user;
 
     if (!user) {

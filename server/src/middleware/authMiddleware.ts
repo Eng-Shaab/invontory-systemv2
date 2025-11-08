@@ -1,8 +1,9 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
 import type { AuthenticatedUser } from "../types/auth";
 import { SESSION_COOKIE_NAME } from "../constants/auth";
+import type { AuthenticatedRequest } from "../types/http";
 
 interface TokenPayload {
   sessionId: string;
@@ -17,12 +18,7 @@ if (!jwtSecret) {
   throw new Error("JWT_SECRET environment variable is required for authentication middleware.");
 }
 
-type AuthedRequest = Request & {
-  user?: AuthenticatedUser;
-  sessionId?: string;
-};
-
-export const authMiddleware = async (req: AuthedRequest, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
   const token = req.cookies?.[SESSION_COOKIE_NAME];
 

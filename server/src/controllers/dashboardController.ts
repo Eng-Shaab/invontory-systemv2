@@ -1,7 +1,8 @@
-import type { Request, Response } from "express"
+import type { Response } from "express"
 import { prisma } from "../lib/prisma"
+import type { AuthenticatedRequest } from "../types/http"
 
-export const getDashboardMetrics = async (req: Request, res: Response): Promise<void> => {
+export const getDashboardMetrics = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     // Get all dashboard data in parallel
     const [

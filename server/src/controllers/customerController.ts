@@ -1,7 +1,8 @@
 import type { Request, Response } from "express"
 import { prisma } from "../lib/prisma"
+import type { AuthenticatedRequest } from "../types/http"
 
-export const getCustomers = async (req: Request, res: Response): Promise<void> => {
+export const getCustomers = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const search = req.query.search?.toString()
     const customers = await prisma.customers.findMany({
@@ -35,7 +36,7 @@ export const getCustomers = async (req: Request, res: Response): Promise<void> =
   }
 }
 
-export const getCustomerById = async (req: Request, res: Response): Promise<void> => {
+export const getCustomerById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params
     const customer = await prisma.customers.findUnique({

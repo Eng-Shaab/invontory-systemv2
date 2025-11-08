@@ -1,8 +1,8 @@
 import type { Request, Response } from "express"
-
 import { prisma } from "../lib/prisma"
+import type { AuthenticatedRequest } from "../types/http"
 
-export const getSales = async (req: Request, res: Response): Promise<void> => {
+export const getSales = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const sales = await prisma.sales.findMany({
       include: {
@@ -24,7 +24,7 @@ export const getSales = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export const getSaleById = async (req: Request, res: Response): Promise<void> => {
+export const getSaleById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params
     const sale = await prisma.sales.findUnique({

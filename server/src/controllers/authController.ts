@@ -7,6 +7,7 @@ import { prisma } from "../lib/prisma";
 import { Role } from "@prisma/client";
 import { SESSION_COOKIE_NAME } from "../constants/auth";
 import type { AuthenticatedUser } from "../types/auth";
+import type { AuthenticatedRequest } from "../types/http";
 import { recordAuditLog } from "../lib/auditLogger";
 const DEFAULT_SESSION_TTL_DAYS = 7;
 const DEFAULT_TOKEN_TTL_MINUTES = 10;
@@ -120,11 +121,6 @@ const sanitizeUser = (
   lastLoginAt: user.lastLoginAt,
   createdAt: user.createdAt,
 });
-
-type AuthedRequest = Request & {
-  user?: AuthenticatedUser;
-  sessionId?: string;
-};
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body as { email?: string; password?: string };
@@ -255,7 +251,7 @@ export const verifyTwoFactorCode = async (req: Request, res: Response) => {
   res.json({ user: sanitizeUser(updatedUser) });
 };
 
-export const getCurrentUser = async (req: AuthedRequest, res: Response) => {
+export const getCurrentUser = async (req: AuthenticatedRequest, res: Response) => {
   const authUser = req.user;
 
   if (!authUser) {
@@ -273,7 +269,7 @@ export const getCurrentUser = async (req: AuthedRequest, res: Response) => {
   res.json({ user: sanitizeUser(user) });
 };
 
-export const logout = async (req: AuthedRequest, res: Response) => {
+export const logout = async (req: AuthenticatedRequest, res: Response) => {
   const { sessionId } = req;
 
   if (sessionId) {

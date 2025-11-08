@@ -1,9 +1,9 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { recordAuditLog } from "../lib/auditLogger";
-import type { AuthenticatedUser } from "../types/auth";
+import type { AuthenticatedRequest } from "../types/http";
 
 const sanitizeUser = (user: {
   id: string;
@@ -25,9 +25,7 @@ const sanitizeUser = (user: {
   updatedAt: user.updatedAt,
 });
 
-type AuthedRequest = Request & {
-  user?: AuthenticatedUser;
-};
+type AuthedRequest = AuthenticatedRequest;
 
 const parseRole = (role?: string): Role | null => {
   if (!role) return null;
