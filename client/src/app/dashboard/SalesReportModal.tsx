@@ -44,7 +44,10 @@ const SalesReportModal = ({ isOpen, onClose }: SalesReportModalProps) => {
       const reportData = {
         type: reportType as "full" | "summary" | "topCustomers" | "profitAnalysis",
         dateRange: { from: dateFrom, to: dateTo },
-        sales: sales || [],
+        sales: sales.map((sale) => ({
+          ...sale,
+          profit: sale.profit ?? 0,
+        })),
       }
 
       await generateSalesPDF(reportData)
