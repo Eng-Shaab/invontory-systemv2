@@ -27,6 +27,15 @@ const envAllowedOrigins = process.env.CLIENT_URL
 
 const allowedOrigins = Array.from(new Set([...baseAllowedOrigins, ...envAllowedOrigins]));
 
+const isAllowedVercelPreview = (origin: string): boolean => {
+  try {
+    const { hostname } = new URL(origin)
+    return hostname.endsWith(".vercel.app")
+  } catch {
+    return false
+  }
+}
+
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     if (!origin) {
@@ -34,7 +43,7 @@ const corsOptions: CorsOptions = {
       return;
     }
 
-    if (allowedOrigins.includes(origin)) {
+  if (allowedOrigins.includes(origin) || isAllowedVercelPreview(origin)) {
       callback(null, true);
       return;
     }
