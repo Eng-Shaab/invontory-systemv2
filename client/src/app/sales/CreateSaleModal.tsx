@@ -18,9 +18,10 @@ type CreateSaleModalProps = {
   onCreate: (formData: SaleFormData) => void
   products: any[]
   customers: any[]
+  showProfit?: boolean
 }
 
-const CreateSaleModal = ({ isOpen, onClose, onCreate, products, customers }: CreateSaleModalProps) => {
+const CreateSaleModal = ({ isOpen, onClose, onCreate, products, customers, showProfit = true }: CreateSaleModalProps) => {
   const [formData, setFormData] = useState({
     productId: "",
     customerId: "",
@@ -163,18 +164,22 @@ const CreateSaleModal = ({ isOpen, onClose, onCreate, products, customers }: Cre
             readOnly
           />
 
-          <label htmlFor="profit" className={labelCssStyles}>
-            Profit
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            name="profit"
-            placeholder="Profit"
-            value={formData.profit}
-            className={`${inputCssStyles} ${formData.profit > 0 ? "text-green-600" : formData.profit < 0 ? "text-red-600" : "text-gray-600"}`}
-            readOnly
-          />
+          {showProfit && (
+            <>
+              <label htmlFor="profit" className={labelCssStyles}>
+                Profit
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                name="profit"
+                placeholder="Profit"
+                value={formData.profit}
+                className={`${inputCssStyles} ${formData.profit > 0 ? "text-green-600" : formData.profit < 0 ? "text-red-600" : "text-gray-600"}`}
+                readOnly
+              />
+            </>
+          )}
 
           <button type="submit" className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">
             Record Sale

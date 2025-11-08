@@ -13,7 +13,7 @@ const router = Router()
 
 router.get("/", getSales)
 router.get("/:id", getSaleById)
-router.post("/", authorizeRoles(Role.ADMIN), createSale)
+router.post("/", authorizeRoles(Role.ADMIN, Role.USER), createSale)
 router.put("/:id", authorizeRoles(Role.ADMIN), updateSale)
 router.delete("/:id", authorizeRoles(Role.ADMIN), deleteSale)
 

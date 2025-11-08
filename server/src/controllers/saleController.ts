@@ -52,12 +52,12 @@ export const getSaleById = async (req: AuthenticatedRequest, res: Response): Pro
   }
 }
 
-export const createSale = async (req: Request, res: Response): Promise<void> => {
+export const createSale = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { productId, customerId, quantity, unitPrice, totalAmount, profit } = req.body
-    
+
     // Start a transaction to update product stock and create sale
-    const result = await prisma.$transaction(async (tx: { products: { findUnique: (arg0: { where: { productId: any } }) => any; update: (arg0: { where: { productId: any }; data: { stockQuantity: { decrement: any } } }) => any }; sales: { create: (arg0: { data: { productId: any; customerId: any; quantity: any; unitPrice: any; totalAmount: any; profit: any }; include: { product: boolean; customer: boolean } }) => any } }) => {
+    const result = await prisma.$transaction(async (tx) => {
       // Check if product has enough stock
       const product = await tx.products.findUnique({
         where: { productId },
@@ -100,7 +100,12 @@ export const createSale = async (req: Request, res: Response): Promise<void> => 
       return sale
     })
 
-    res.status(201).json(result)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? (({ profit: _profit, ...rest }) => rest)(result)
+      : result
+
+    res.status(201).json(payload)
   } catch (error: any) {
     if (error.message === "Product not found") {
       res.status(404).json({ message: "Product not found" })

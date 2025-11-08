@@ -31,7 +31,6 @@ const Sales = () => {
   const [deleteSale] = useDeleteSaleMutation()
 
   const handleCreateSale = async (saleData: any) => {
-    if (!isAdmin) return
     await createSale(saleData)
   }
 
@@ -68,14 +67,12 @@ const Sales = () => {
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <Header name="Sales" />
-        {isAdmin && (
-          <button
-            className="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setIsCreateModalOpen(true)}
-          >
-            <PlusCircleIcon className="w-5 h-5 mr-2" /> Record Sale
-          </button>
-        )}
+        <button
+          className="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
+          <PlusCircleIcon className="w-5 h-5 mr-2" /> Record Sale
+        </button>
       </div>
 
       {/* SUMMARY CARDS */}
@@ -203,36 +200,40 @@ const Sales = () => {
       </div>
 
       {/* MODALS */}
-      {isAdmin && (
-        <>
-          <CreateSaleModal
-            isOpen={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
-            onCreate={handleCreateSale}
-            products={products || []}
-            customers={customers || []}
-          />
-          <EditSaleModal
-            isOpen={isEditModalOpen}
-            onClose={() => {
-              setIsEditModalOpen(false)
-              setSelectedSale(null)
-            }}
-            sale={selectedSale}
-            products={products || []}
-            customers={customers || []}
-          />
-          <DeleteSaleModal
-            isOpen={isDeleteModalOpen}
-            onClose={() => {
-              setIsDeleteModalOpen(false)
-              setSelectedSale(null)
-            }}
-            onConfirm={handleDeleteConfirm}
-            saleId={selectedSale?.saleId}
-          />
-        </>
-      )}
+      <>
+        <CreateSaleModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreate={handleCreateSale}
+          products={products || []}
+          customers={customers || []}
+          showProfit={isAdmin}
+        />
+        {isAdmin && (
+          <>
+            <EditSaleModal
+              isOpen={isEditModalOpen}
+              onClose={() => {
+                setIsEditModalOpen(false)
+                setSelectedSale(null)
+              }}
+              sale={selectedSale}
+              products={products || []}
+              customers={customers || []}
+              showProfit={isAdmin}
+            />
+            <DeleteSaleModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => {
+                setIsDeleteModalOpen(false)
+                setSelectedSale(null)
+              }}
+              onConfirm={handleDeleteConfirm}
+              saleId={selectedSale?.saleId}
+            />
+          </>
+        )}
+      </>
     </div>
   )
 }

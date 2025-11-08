@@ -25,7 +25,6 @@ const Customers = () => {
   const [deleteCustomer] = useDeleteCustomerMutation()
 
   const handleCreateCustomer = async (customerData: any) => {
-    if (!isAdmin) return
     await createCustomer(customerData)
   }
 
@@ -75,14 +74,12 @@ const Customers = () => {
       {/* HEADER BAR */}
       <div className="flex justify-between items-center mb-6">
         <Header name="Customers" />
-        {isAdmin && (
-          <button
-            className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setIsCreateModalOpen(true)}
-          >
-            <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Customer
-          </button>
-        )}
+        <button
+          className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
+          <PlusCircleIcon className="w-5 h-5 mr-2" /> Add Customer
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -180,32 +177,34 @@ const Customers = () => {
       </div>
 
       {/* MODALS */}
-      {isAdmin && (
-        <>
-          <CreateCustomerModal
-            isOpen={isCreateModalOpen}
-            onClose={() => setIsCreateModalOpen(false)}
-            onCreate={handleCreateCustomer}
-          />
-          <EditCustomerModal
-            isOpen={isEditModalOpen}
-            onClose={() => {
-              setIsEditModalOpen(false)
-              setSelectedCustomer(null)
-            }}
-            customer={selectedCustomer}
-          />
-          <DeleteCustomerModal
-            isOpen={isDeleteModalOpen}
-            onClose={() => {
-              setIsDeleteModalOpen(false)
-              setSelectedCustomer(null)
-            }}
-            onConfirm={handleDeleteConfirm}
-            customerName={selectedCustomer?.name}
-          />
-        </>
-      )}
+      <>
+        <CreateCustomerModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreate={handleCreateCustomer}
+        />
+        {isAdmin && (
+          <>
+            <EditCustomerModal
+              isOpen={isEditModalOpen}
+              onClose={() => {
+                setIsEditModalOpen(false)
+                setSelectedCustomer(null)
+              }}
+              customer={selectedCustomer}
+            />
+            <DeleteCustomerModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => {
+                setIsDeleteModalOpen(false)
+                setSelectedCustomer(null)
+              }}
+              onConfirm={handleDeleteConfirm}
+              customerName={selectedCustomer?.name}
+            />
+          </>
+        )}
+      </>
     </div>
   )
 }

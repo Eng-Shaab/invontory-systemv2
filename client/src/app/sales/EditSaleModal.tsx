@@ -10,9 +10,10 @@ type EditSaleModalProps = {
   sale: any
   products: any[]
   customers: any[]
+  showProfit?: boolean
 }
 
-const EditSaleModal = ({ isOpen, onClose, sale, products, customers }: EditSaleModalProps) => {
+const EditSaleModal = ({ isOpen, onClose, sale, products, customers, showProfit = true }: EditSaleModalProps) => {
   const [formData, setFormData] = useState({
     productId: "",
     customerId: "",
@@ -160,18 +161,22 @@ const EditSaleModal = ({ isOpen, onClose, sale, products, customers }: EditSaleM
             readOnly
           />
 
-          <label htmlFor="profit" className={labelCssStyles}>
-            Profit
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            name="profit"
-            placeholder="Profit"
-            value={formData.profit}
-            className={`${inputCssStyles} ${formData.profit > 0 ? "text-green-600" : formData.profit < 0 ? "text-red-600" : "text-gray-600"}`}
-            readOnly
-          />
+          {showProfit && (
+            <>
+              <label htmlFor="profit" className={labelCssStyles}>
+                Profit
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                name="profit"
+                placeholder="Profit"
+                value={formData.profit}
+                className={`${inputCssStyles} ${formData.profit > 0 ? "text-green-600" : formData.profit < 0 ? "text-red-600" : "text-gray-600"}`}
+                readOnly
+              />
+            </>
+          )}
 
           <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
             Update Sale
