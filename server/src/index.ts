@@ -43,7 +43,7 @@ const corsOptions: CorsOptions = {
       return;
     }
 
-  if (allowedOrigins.includes(origin) || isAllowedVercelPreview(origin)) {
+    if (allowedOrigins.includes(origin) || isAllowedVercelPreview(origin)) {
       callback(null, true);
       return;
     }
@@ -63,7 +63,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
