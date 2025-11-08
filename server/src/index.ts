@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import cors from "cors";
+import cors, { type CorsOptions } from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
@@ -20,7 +20,31 @@ import { authMiddleware } from "./middleware/authMiddleware";
 dotenv.config();
 const app = express();
 
-const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : undefined;
+const baseAllowedOrigins = ["http://localhost:3000", "http://127.0.0.1:3000"];
+const envAllowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim()).filter(Boolean)
+  : [];
+
+const allowedOrigins = Array.from(new Set([...baseAllowedOrigins, ...envAllowedOrigins]));
+
+const corsOptions: CorsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Cookie"],
+};
 
 app.use(express.json());
 app.use(helmet());
@@ -29,12 +53,8 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: allowedOrigins ?? true,
-    credentials: true,
-  }),
-);
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
