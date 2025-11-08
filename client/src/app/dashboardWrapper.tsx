@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useEffect } from 'react'
-import Navbar from "@/app/(components)/Navbar";
-import Sidebar from "@/app/(components)/Sidebar";
-import { useAppSelector } from './redux';
-import { usePathname } from 'next/navigation';
+import React, { useEffect } from "react"
+import Navbar from "@/app/(components)/Navbar"
+import Sidebar from "@/app/(components)/Sidebar"
+import { useAppSelector } from "./redux"
+import { usePathname, useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
+import { useMemo } from "react"
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isSidebarCollapsed = useAppSelector(
@@ -13,12 +15,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.add("light")
-    }
-  })
+    document.documentElement.classList.toggle("dark", isDarkMode)
+    document.documentElement.classList.toggle("light", !isDarkMode)
+  }, [isDarkMode])
 
   return (
     <div 
@@ -39,7 +38,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-const DashboardWrapper = ({ children }: { children: React.ReactNode}) => {
+const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return <DashboardLayout>{children}</DashboardLayout>
 }
 
@@ -47,36 +46,69 @@ export default DashboardWrapper
 
 // Single place wrapper that decides when to show the dashboard chrome
 export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
+  const pathname = usePathname()
+  const router = useRouter()
+  const { status } = useAuth()
 
-  if (!pathname) return <>{children}</>;
+  const authRoutes = useMemo(() => ["/login", "/verify"], [])
 
-  // Never show dashboard chrome on auth routes
-  if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
-    return <>{children}</>;
+  const dashboardBases = useMemo(
+    () => [
+      "/",
+      "/dashboard",
+      "/customers",
+      "/products",
+      "/inventory",
+      "/sales",
+      "/purchases",
+      "/settings",
+      "/test",
+    ],
+    [],
+  )
+
+  const isAuthRoute = pathname ? authRoutes.some((route) => pathname.startsWith(route)) : false
+  const shouldWrap =
+    pathname &&
+    dashboardBases.some((base) => {
+      if (base === "/") return pathname === "/"
+      return pathname === base || pathname.startsWith(`${base}/`)
+    })
+
+  useEffect(() => {
+    if (!pathname) return
+
+    if (isAuthRoute && status === "authenticated") {
+      router.replace("/dashboard")
+      return
+    }
+
+    if (shouldWrap && status === "unauthenticated") {
+      router.replace(`/login?redirectTo=${encodeURIComponent(pathname)}`)
+    }
+  }, [isAuthRoute, pathname, router, shouldWrap, status])
+
+  if (!pathname) return <>{children}</>
+
+  if (isAuthRoute) {
+    return <>{children}</>
   }
-
-  // Routes that should show the dashboard layout
-  const dashboardBases = [
-    '/',
-    '/dashboard',
-    '/customers',
-    '/products',
-    '/inventory',
-    '/sales',
-    '/purchases',
-    '/settings',
-    '/test',
-  ];
-
-  const shouldWrap = dashboardBases.some((base) => {
-    if (base === '/') return pathname === '/';
-    return pathname === base || pathname.startsWith(base + '/');
-  });
 
   if (shouldWrap) {
-    return <DashboardWrapper>{children}</DashboardWrapper>;
+    if (status === "loading") {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-slate-50">
+          <span className="text-sm text-gray-500">Loading dashboard...</span>
+        </div>
+      )
+    }
+
+    if (status !== "authenticated") {
+      return null
+    }
+
+    return <DashboardWrapper>{children}</DashboardWrapper>
   }
 
-  return <>{children}</>;
+  return <>{children}</>
 }

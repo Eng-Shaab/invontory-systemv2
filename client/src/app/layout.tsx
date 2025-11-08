@@ -1,11 +1,9 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import DashboardWrapper from "./dashboardWrapper"
-
-import { ClerkProvider } from "@clerk/nextjs"
 import StoreProvider from "./redux"
 import { DashboardShell } from "./dashboardWrapper"
+import { AuthProvider } from "@/context/AuthContext"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -20,16 +18,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-      <html lang="en">
-        <body className={inter.className}>
-          <StoreProvider>
-            <DashboardShell>
-              {children}
-            </DashboardShell>
-          </StoreProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <StoreProvider>
+          <AuthProvider>
+            <DashboardShell>{children}</DashboardShell>
+          </AuthProvider>
+        </StoreProvider>
+      </body>
+    </html>
   )
 }

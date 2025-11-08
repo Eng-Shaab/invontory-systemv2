@@ -12,7 +12,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (!pathname) return <>{children}</>;
 
   // Never show dashboard chrome on auth routes
-  const isAuthRoute = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+  const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/verify");
   if (isAuthRoute) return <>{children}</>;
 
   // Routes that should render inside the dashboard layout
