@@ -29,7 +29,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api";
 
-const fetchJson = async <T>(input: RequestInfo, init?: RequestInit): Promise<T> => {
+const fetchJson = async <T,>(input: RequestInfo, init?: RequestInit): Promise<T> => {
   const response = await fetch(input, init);
 
   const contentType = response.headers.get("content-type");
