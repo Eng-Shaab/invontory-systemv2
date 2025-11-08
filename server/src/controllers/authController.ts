@@ -55,8 +55,7 @@ const sendTwoFactorEmail = async (email: string, code: string) => {
   }
 
   const brand = "Sanabil Abaya";
-  const digits = code.split("");
-  const formattedCode = digits.join(" ");
+  const formattedCode = code;
   const previewText = `Your ${brand} verification code is ${code}.`;
 
   await transporter.sendMail({
@@ -72,37 +71,29 @@ const sendTwoFactorEmail = async (email: string, code: string) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${brand} verification code</title>
     <style>
-      body { margin:0; padding:0; font-family:'Segoe UI',sans-serif; background-color:#f8fafc; color:#0f172a; }
-      .wrapper { padding:40px 0; }
-      .container { max-width:540px; margin:0 auto; background:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 24px 60px rgba(202,34,82,0.15); }
-  .hero { background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 50%,#0ea5e9 100%); padding:32px; color:#eff6ff; }
-      .hero h1 { margin:0; font-size:24px; font-weight:600; }
-      .content { padding:32px; }
-      .code { display:flex; justify-content:center; gap:12px; margin:32px 0; }
-  .digit { width:56px; height:64px; border-radius:18px; background:#eff6ff; color:#1d4ed8; font-size:28px; font-weight:600; display:flex; align-items:center; justify-content:center; box-shadow:inset 0 0 0 1px rgba(37,99,235,0.25); }
-  .footer { margin-top:32px; font-size:12px; color:#475569; text-align:center; }
+      body { margin:0; padding:24px 0; font-family:'Segoe UI',sans-serif; background-color:#f8fafc; color:#0f172a; }
+      .container { max-width:520px; margin:0 auto; background:#ffffff; border-radius:18px; box-shadow:0 14px 40px rgba(15,23,42,0.08); overflow:hidden; }
+      .header { padding:24px 28px; border-bottom:1px solid #e2e8f0; }
+      .header-title { margin:0; font-size:18px; font-weight:600; color:#1d4ed8; letter-spacing:0.18em; text-transform:uppercase; }
+      .content { padding:28px; font-size:14px; line-height:22px; }
+      .code-block { margin:24px 0; padding:22px; border-radius:12px; background:#eff6ff; font-size:28px; font-weight:600; letter-spacing:0.4em; color:#1d4ed8; text-align:center; }
+      .footer { padding:20px 28px; background:#f1f5f9; font-size:12px; color:#475569; text-align:center; }
     </style>
   </head>
   <body>
-    <div class="wrapper">
-      <div class="container">
-        <div class="hero">
-          <p style="letter-spacing:0.4em; text-transform:uppercase; opacity:0.9; font-size:11px;">${brand}</p>
-          <h1>Secure sign-in verification</h1>
-          <p style="margin-top:12px; font-size:14px; max-width:360px; color:rgba(255,255,255,0.8);">Use the code below to finish signing in to your Sanabil Abaya dashboard. This code expires in 10 minutes.</p>
-        </div>
-        <div class="content">
-          <p style="font-size:14px; line-height:22px;">Hi there,</p>
-          <p style="font-size:14px; line-height:22px; margin-top:12px;">Enter this verification code in the browser window where you requested it:</p>
-          <div class="code">
-            ${digits.map((digit) => `<div class="digit">${digit}</div>`).join("")}
-          </div>
-          <p style="font-size:13px; line-height:21px; color:#475569;">If you did not request this code, someone may have tried to access your account. Please reset your password or contact support immediately.</p>
-          <p style="font-size:13px; line-height:21px; color:#475569; margin-top:16px;">With care,<br/>The ${brand} team</p>
-          <div class="footer">
-            <p>This email was sent by ${brand}. Need help? Reply to this message or contact support@sanabilabaya.com.</p>
-          </div>
-        </div>
+    <div class="container">
+      <div class="header">
+        <p class="header-title">${brand}</p>
+      </div>
+      <div class="content">
+        <p style="margin:0 0 12px;">Hello,</p>
+        <p style="margin:0 0 12px;">Use the verification code below to finish signing in. This code expires in 10 minutes.</p>
+  <div class="code-block">${formattedCode}</div>
+        <p style="margin:0 0 12px; color:#475569;">If you did not request this code, please reset your password or contact support immediately.</p>
+        <p style="margin:16px 0 0; color:#475569;">With care,<br/>The ${brand} team</p>
+      </div>
+      <div class="footer">
+        Need assistance? Reply to this email or contact support@sanabilabaya.com.
       </div>
     </div>
   </body>

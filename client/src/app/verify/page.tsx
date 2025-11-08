@@ -6,7 +6,7 @@ import { Input } from "@/app/(components)/ui/input";
 import { Label } from "@/app/(components)/ui/label";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { type ClipboardEvent, FormEvent, useEffect, useMemo, useState } from "react";
 
 export default function VerifyPage() {
   const { verifyCode, status } = useAuth();
@@ -41,6 +41,14 @@ export default function VerifyPage() {
   };
 
   const isBusy = useMemo(() => isSubmitting || status === "loading", [isSubmitting, status]);
+
+  const normalizeCode = (value: string) => value.replace(/[^0-9]/g, "").slice(0, 6);
+
+  const handlePaste = (event: ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const pasted = event.clipboardData.getData("text");
+    setCode(normalizeCode(pasted));
+  };
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-100">
@@ -89,7 +97,8 @@ export default function VerifyPage() {
                     pattern="[0-9]{6}"
                     maxLength={6}
                     value={code}
-                    onChange={(event) => setCode(event.target.value.replace(/[^0-9]/g, ""))}
+                    onChange={(event) => setCode(normalizeCode(event.target.value))}
+                    onPaste={handlePaste}
                     required
                     className="h-14 rounded-xl border-slate-200 bg-slate-50 text-center text-2xl tracking-[0.5em] text-slate-700 focus:border-blue-300 focus:ring-blue-200"
                   />
