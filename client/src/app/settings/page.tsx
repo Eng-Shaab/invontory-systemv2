@@ -5,16 +5,19 @@ import { setIsDarkMode } from "@/state"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/(components)/ui/card"
 import { Switch } from "@/app/(components)/ui/switch"
 import { Button } from "@/app/(components)/ui/button"
-import { Input } from "@//app/(components)/ui/input"
+import { Input } from "@/app/(components)/ui/input"
 import { Label } from "@/app/(components)/ui/label"
 import { Separator } from "@/app/(components)/ui/separator"
-import { useUser } from "@clerk/nextjs"
+import { useAuth } from "@/context/AuthContext"
 import { Bell, Moon, Sun, User, Shield, Database, Download } from "lucide-react"
 
 const SettingsPage = () => {
   const dispatch = useAppDispatch()
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
-  const { user } = useUser()
+  const { user } = useAuth()
+  const nameParts = (user?.name ?? "").trim().split(/\s+/).filter(Boolean)
+  const firstName = nameParts[0] ?? ""
+  const lastName = nameParts.slice(1).join(" ")
 
   const toggleDarkMode = () => {
     dispatch(setIsDarkMode(!isDarkMode))
@@ -41,11 +44,11 @@ const SettingsPage = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" defaultValue={user?.firstName || ""} placeholder="Enter first name" />
+                <Input id="firstName" defaultValue={firstName} placeholder="Enter first name" />
               </div>
               <div>
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" defaultValue={user?.lastName || ""} placeholder="Enter last name" />
+                <Input id="lastName" defaultValue={lastName} placeholder="Enter last name" />
               </div>
             </div>
             <div>
@@ -53,7 +56,7 @@ const SettingsPage = () => {
               <Input
                 id="email"
                 type="email"
-                defaultValue={user?.emailAddresses[0]?.emailAddress || ""}
+                defaultValue={user?.email || ""}
                 placeholder="Enter email"
               />
             </div>

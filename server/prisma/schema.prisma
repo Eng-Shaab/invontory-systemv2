@@ -7,14 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
-  adminId   String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-}
-
 model Products {
   productId     String   @id @default(cuid())
   name          String
@@ -89,4 +81,59 @@ model CustomerSummary {
   repeatCustomers   Int      // Customers with >1 Sale
   changePercent     Float?   // percentage change vs last period
   createdAt         DateTime @default(now())
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  role          Role      @default(USER)
+  name          String?
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  twoFactorAuth TwoFactorToken[]
+  auditEntries  AuditLog[] @relation("AuditLogsActor")
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  userId     String
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TwoFactorToken {
+  id        String   @id @default(cuid())
+  email     String
+  codeHash  String
+  expiresAt DateTime
+  usedAt    DateTime?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditLogsActor", fields: [actorId], references: [id])
+  targetType String
+  targetId   String?
+  action     String
+  summary    String?
+  metadata   Json?
+  snapshot   Json?
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  USER
 }

@@ -1,9 +1,8 @@
 import type { Request, Response } from "express"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "../lib/prisma"
+import type { AuthenticatedRequest } from "../types/http"
 
-const prisma = new PrismaClient()
-
-export const getCustomers = async (req: Request, res: Response): Promise<void> => {
+export const getCustomers = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const search = req.query.search?.toString()
     const customers = await prisma.customers.findMany({
@@ -23,13 +22,21 @@ export const getCustomers = async (req: Request, res: Response): Promise<void> =
         },
       },
     })
-    res.json(customers)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? customers.map((customer) => ({
+          ...customer,
+          sales: customer.sales?.map(({ profit, ...sale }) => sale) ?? [],
+        }))
+      : customers
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving customers" })
   }
 }
 
-export const getCustomerById = async (req: Request, res: Response): Promise<void> => {
+export const getCustomerById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params
     const customer = await prisma.customers.findUnique({
@@ -48,6 +55,15 @@ export const getCustomerById = async (req: Request, res: Response): Promise<void
 
     if (!customer) {
       res.status(404).json({ message: "Customer not found" })
+      return
+    }
+
+    if (req.user?.role !== "ADMIN") {
+      const safeCustomer = {
+        ...customer,
+        sales: customer.sales?.map(({ profit, ...sale }) => sale) ?? [],
+      }
+      res.json(safeCustomer)
       return
     }
 

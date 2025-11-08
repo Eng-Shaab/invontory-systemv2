@@ -1,4 +1,5 @@
 import { Router } from "express"
+import { Role } from "@prisma/client"
 import {
   createCustomer,
   getCustomers,
@@ -6,13 +7,14 @@ import {
   updateCustomer,
   deleteCustomer,
 } from "../controllers/customerController"
+import { authorizeRoles } from "../middleware/authorizeRole"
 
 const router = Router()
 
 router.get("/", getCustomers)
 router.get("/:id", getCustomerById)
-router.post("/", createCustomer)
-router.put("/:id", updateCustomer)
-router.delete("/:id", deleteCustomer)
+router.post("/", authorizeRoles(Role.ADMIN, Role.USER), createCustomer)
+router.put("/:id", authorizeRoles(Role.ADMIN), updateCustomer)
+router.delete("/:id", authorizeRoles(Role.ADMIN), deleteCustomer)
 
 export default router

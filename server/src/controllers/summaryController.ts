@@ -1,17 +1,21 @@
 import type { Request, Response } from "express"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "../lib/prisma"
+import type { AuthenticatedRequest } from "../types/http"
 
 // GET ONLY - Sales Summary
-export const getSalesSummary = async (req: Request, res: Response): Promise<void> => {
+export const getSalesSummary = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const salesSummary = await prisma.salesSummary.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     })
-    res.json(salesSummary)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? salesSummary.map(({ totalProfit, ...summary }) => summary)
+      : salesSummary
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving sales summary" })
   }

@@ -1,16 +1,20 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/app/redux"
-import { Bell, Menu, Moon, Search, Settings, Sun } from "lucide-react"
+import { Bell, LogOut, Menu, Moon, Search, Settings, Sun } from "lucide-react"
 import { setIsSidebarCollapsed, setIsDarkMode } from "@/state"
-import { UserButton, useUser } from "@clerk/nextjs"
 import Link from "next/link"
+import { useAuth } from "@/context/AuthContext"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const Navbar = () => {
   const dispatch = useAppDispatch()
   const isSidebarCollapsed = useAppSelector((state) => state.global.isSidebarCollapsed)
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
-  const { user } = useUser()
+  const { user, logout } = useAuth()
+  const router = useRouter()
+  const [isSigningOut, setIsSigningOut] = useState(false)
 
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed))
@@ -18,6 +22,27 @@ const Navbar = () => {
 
   const toggleDarkMode = () => {
     dispatch(setIsDarkMode(!isDarkMode))
+  }
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .filter(Boolean)
+        .map((part) => part[0]?.toUpperCase())
+        .join("")
+    : user?.email?.[0]?.toUpperCase()
+
+  const displayName = user?.name ?? user?.email ?? "User"
+
+  const handleLogout = async () => {
+    try {
+      setIsSigningOut(true)
+      await logout()
+      router.replace("/login")
+    } catch (error) {
+      console.error("Failed to sign out", error)
+      setIsSigningOut(false)
+    }
   }
 
   return (
@@ -60,14 +85,21 @@ const Navbar = () => {
           </div>
           <hr className="w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
           <div className="flex items-center gap-3">
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-9 h-9",
-                },
-              }}
-            />
-            <span className="font-semibold">{user?.firstName || user?.emailAddresses[0]?.emailAddress || "User"}</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
+              {initials ?? "U"}
+            </div>
+            <div className="flex flex-col">
+              <span className="font-semibold text-gray-900">{displayName}</span>
+              <span className="text-xs font-medium uppercase text-gray-500">{user?.role ?? ""}</span>
+            </div>
+            <button
+              className="flex items-center gap-1 rounded-full border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-600 transition hover:bg-gray-100"
+              onClick={handleLogout}
+              disabled={isSigningOut}
+            >
+              <LogOut size={14} />
+              <span>{isSigningOut ? "Signing out" : "Sign out"}</span>
+            </button>
           </div>
         </div>
         <Link href="/settings">

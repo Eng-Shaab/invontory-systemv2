@@ -77,7 +77,7 @@ export interface Sale {
   quantity: number
   unitPrice: number
   totalAmount: number
-  profit: number
+  profit?: number
   createdAt: string
   product?: Products
   customer?: Customer
@@ -101,12 +101,60 @@ export interface UpdateSale {
   profit?: number
 }
 
+// ============= USER MANAGEMENT INTERFACES =============
+
+export type UserRole = "ADMIN" | "USER"
+
+export interface AppUser {
+  id: string
+  email: string
+  role: UserRole
+  name?: string | null
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  lastLoginAt?: string | null
+}
+
+export interface NewUserPayload {
+  email: string
+  password: string
+  role: UserRole
+  name?: string
+}
+
+export interface UpdateUserPayload {
+  email?: string
+  password?: string
+  role?: UserRole
+  name?: string | null
+  isActive?: boolean
+}
+
+export interface AuditLogActor {
+  id: string
+  email: string
+  name?: string | null
+}
+
+export interface AuditLogEntry {
+  id: string
+  targetType: string
+  targetId?: string | null
+  action: string
+  summary?: string | null
+  metadata?: Record<string, unknown> | null
+  snapshot?: Record<string, unknown> | null
+  createdAt: string
+  actor: AuditLogActor | null
+}
+
 // ============= SUMMARY INTERFACES (GET ONLY) =============
 
 export interface SalesSummary {
   id: string
   totalRevenue: number
-  totalProfit: number
+  totalProfit?: number
   salesCount: number
   changePercent?: number
   createdAt: string
@@ -141,7 +189,10 @@ export interface DashboardMetrics {
 // ============= API DEFINITION =============
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "/api" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "/api",
+    credentials: "include",
+  }),
   reducerPath: "api",
   tagTypes: [
     "DashboardMetrics",
@@ -152,6 +203,8 @@ export const api = createApi({
     "SalesSummary",
     "InventorySummary",
     "CustomerSummary",
+    "Users",
+    "AuditLogs",
   ],
   endpoints: (build) => ({
     // ============= DASHBOARD ENDPOINTS =============
@@ -298,6 +351,57 @@ export const api = createApi({
       invalidatesTags: ["Sale", "Products", "DashboardMetrics"],
     }),
 
+    // ============= USER ENDPOINTS =============
+    getUsers: build.query<AppUser[], { search?: string; includeInactive?: boolean } | void>({
+      query: (params) => ({
+        url: "/users",
+        params: {
+          ...(params?.search ? { search: params.search } : {}),
+          ...(params?.includeInactive ? { includeInactive: "true" } : {}),
+        },
+      }),
+      providesTags: ["Users"],
+    }),
+    getUserById: build.query<AppUser, string>({
+      query: (id) => `/users/${id}`,
+      providesTags: ["Users"],
+    }),
+    createUser: build.mutation<AppUser, NewUserPayload>({
+      query: (payload) => ({
+        url: "/users",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Users", "AuditLogs"],
+    }),
+    updateUser: build.mutation<AppUser, { id: string; data: UpdateUserPayload }>({
+      query: ({ id, data }) => ({
+        url: `/users/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Users", "AuditLogs"],
+    }),
+    deleteUser: build.mutation<void, string>({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users", "AuditLogs"],
+    }),
+
+    // ============= AUDIT LOG ENDPOINTS =============
+    getAuditLogs: build.query<AuditLogEntry[], { limit?: number; targetType?: string } | void>({
+      query: (params) => ({
+        url: "/audit-logs",
+        params: {
+          ...(params?.limit ? { limit: params.limit } : {}),
+          ...(params?.targetType ? { targetType: params.targetType } : {}),
+        },
+      }),
+      providesTags: ["AuditLogs"],
+    }),
+
     // ============= SUMMARY ENDPOINTS (GET ONLY) =============
     getSalesSummary: build.query<SalesSummary[], void>({
       query: () => "/summary/sales",
@@ -346,6 +450,16 @@ export const {
   useCreateSaleMutation,
   useUpdateSaleMutation,
   useDeleteSaleMutation,
+
+  // Users
+  useGetUsersQuery,
+  useGetUserByIdQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+
+  // Audit Logs
+  useGetAuditLogsQuery,
 
   // Summary (GET only)
   useGetSalesSummaryQuery,

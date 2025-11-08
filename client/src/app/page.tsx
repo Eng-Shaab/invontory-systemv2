@@ -1,13 +1,24 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function Home() {
-  const { userId } = await auth();
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
-  if (!userId) {
-    redirect("/sign-in");
-    return null; // Prevent rendering anything before redirect
-  }
+export default function Home() {
+  const router = useRouter();
+  const { status } = useAuth();
 
-  return <div>Loading...</div>; // Placeholder until authenticated content is loaded
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard");
+    } else if (status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [router, status]);
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <span className="text-sm text-gray-500">Preparing your dashboard...</span>
+    </div>
+  );
 }

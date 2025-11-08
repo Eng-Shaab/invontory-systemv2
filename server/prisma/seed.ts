@@ -1,60 +1,75 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
+
 const prisma = new PrismaClient();
 
-async function deleteAllData(orderedFileNames: string[]) {
-  const modelNames = orderedFileNames.map((fileName) => {
-    const modelName = path.basename(fileName, path.extname(fileName));
-    return modelName.charAt(0).toUpperCase() + modelName.slice(1);
-  });
+const MODEL_KEY_OVERRIDES: Record<string, keyof PrismaClient> = {
+  users: "user",
+};
 
-  for (const modelName of modelNames) {
-    const model: any = prisma[modelName as keyof typeof prisma];
-    if (model) {
-      await model.deleteMany({});
-      console.log(`Cleared data from ${modelName}`);
-    } else {
-      console.error(
-        `Model ${modelName} not found. Please ensure the model name is correctly specified.`
-      );
-    }
-  }
+async function clearData() {
+  await prisma.auditLog.deleteMany({});
+  await prisma.session.deleteMany({});
+  await prisma.twoFactorToken.deleteMany({});
+  await prisma.sales.deleteMany({});
+  await prisma.purchases.deleteMany({});
+  await prisma.products.deleteMany({});
+  await prisma.customers.deleteMany({});
+  await prisma.salesSummary.deleteMany({});
+  await prisma.inventorySummary.deleteMany({});
+  await prisma.customerSummary.deleteMany({});
+  await prisma.user.deleteMany({});
 }
 
 async function main() {
   const dataDirectory = path.join(__dirname, "seedData");
 
   const orderedFileNames = [
-   "products.json",          // parent
-  "customers.json",         // parent
-  "purchases.json",         // child (related to products)
-  "sales.json",             // child (related to products & customers)
-  "inventorySummary.json",  // summary
-  "salesSummary.json",      // summary
-  "customerSummary.json", 
+    "users.json",
+    "products.json", // parent
+    "customers.json", // parent
+    "purchases.json", // child (related to products)
+    "sales.json", // child (related to products & customers)
+    "inventorySummary.json", // summary
+    "salesSummary.json", // summary
+    "customerSummary.json",
   ];
 
-  await deleteAllData(orderedFileNames);
+  await clearData();
 
   for (const fileName of orderedFileNames) {
     const filePath = path.join(dataDirectory, fileName);
     const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    const modelName = path.basename(fileName, path.extname(fileName));
-    const model: any = prisma[modelName as keyof typeof prisma];
+    const baseName = path.basename(fileName, path.extname(fileName));
+    const modelKey = (MODEL_KEY_OVERRIDES[baseName] ?? baseName) as keyof PrismaClient;
+  const model = prisma[modelKey] as any;
 
     if (!model) {
       console.error(`No Prisma model matches the file name: ${fileName}`);
       continue;
     }
 
-    for (const data of jsonData) {
+    for (const rawData of jsonData) {
+      if (baseName === "users") {
+        const { password, ...rest } = rawData as { password: string } & Record<string, unknown>;
+        const passwordHash = await bcrypt.hash(password, 10);
+        await prisma.user.create({
+          data: {
+            ...(rest as Record<string, unknown>),
+            passwordHash,
+          } as any,
+        });
+        continue;
+      }
+
       await model.create({
-        data,
+        data: rawData as any,
       });
     }
 
-    console.log(`Seeded ${modelName} with data from ${fileName}`);
+    console.log(`Seeded ${baseName} with data from ${fileName}`);
   }
 }
 

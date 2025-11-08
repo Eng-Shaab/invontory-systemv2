@@ -8,6 +8,7 @@ import { Input } from "@/app/(components)/ui/input"
 import { Label } from "@/app/(components)/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/(components)/ui/select"
 import { Download, FileText, AlertCircle } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
 
 interface SalesReportModalProps {
   isOpen: boolean
@@ -20,7 +21,14 @@ const SalesReportModal = ({ isOpen, onClose }: SalesReportModalProps) => {
   const [dateTo, setDateTo] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const { data: sales } = useGetSalesQuery()
+  const { user } = useAuth()
+  const isAdmin = user?.role === "ADMIN"
+
+  const { data: sales } = useGetSalesQuery(undefined, { skip: !isAdmin })
+
+  if (!isAdmin) {
+    return null
+  }
 
   const handleGenerateReport = async () => {
     if (!sales || sales.length === 0) {

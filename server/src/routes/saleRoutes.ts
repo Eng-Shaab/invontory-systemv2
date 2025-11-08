@@ -6,13 +6,15 @@ import {
   updateSale,
   deleteSale,
 } from "../controllers/saleController"
+import { Role } from "@prisma/client"
+import { authorizeRoles } from "../middleware/authorizeRole"
 
 const router = Router()
 
 router.get("/", getSales)
 router.get("/:id", getSaleById)
-router.post("/", createSale)
-router.put("/:id", updateSale)
-router.delete("/:id", deleteSale)
+router.post("/", authorizeRoles(Role.ADMIN, Role.USER), createSale)
+router.put("/:id", authorizeRoles(Role.ADMIN), updateSale)
+router.delete("/:id", authorizeRoles(Role.ADMIN), deleteSale)
 
 export default router

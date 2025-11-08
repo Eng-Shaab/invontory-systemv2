@@ -1,9 +1,8 @@
 import type { Request, Response } from "express"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "../lib/prisma"
+import type { AuthenticatedRequest } from "../types/http"
 
-const prisma = new PrismaClient()
-
-export const getProducts = async (req: Request, res: Response): Promise<void> => {
+export const getProducts = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const search = req.query.search?.toString()
     const products = await prisma.products.findMany({
@@ -21,13 +20,21 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         },
       },
     })
-    res.json(products)
+    const shouldRedactProfit = req.user?.role !== "ADMIN"
+    const payload = shouldRedactProfit
+      ? products.map((product) => ({
+          ...product,
+          sales: product.sales?.map(({ profit, ...sale }) => sale) ?? [],
+        }))
+      : products
+
+    res.json(payload)
   } catch (error) {
     res.status(500).json({ message: "Error retrieving products" })
   }
 }
 
-export const getProductById = async (req: Request, res: Response): Promise<void> => {
+export const getProductById = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params
     const product = await prisma.products.findUnique({
@@ -44,6 +51,15 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
 
     if (!product) {
       res.status(404).json({ message: "Product not found" })
+      return
+    }
+
+    if (req.user?.role !== "ADMIN") {
+      const redactedProduct = {
+        ...product,
+        sales: product.sales?.map(({ profit, ...sale }) => sale) ?? [],
+      }
+      res.json(redactedProduct)
       return
     }
 
