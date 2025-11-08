@@ -25,6 +25,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     "/sales",
     "/purchases",
     "/settings",
+    "/users",
     "/test",
   ];
 

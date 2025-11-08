@@ -89,10 +89,13 @@ model User {
   passwordHash  String
   role          Role      @default(USER)
   name          String?
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   twoFactorAuth TwoFactorToken[]
+  auditEntries  AuditLog[] @relation("AuditLogsActor")
 }
 
 model Session {
@@ -115,6 +118,19 @@ model TwoFactorToken {
   createdAt DateTime @default(now())
 
   @@index([email])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditLogsActor", fields: [actorId], references: [id])
+  targetType String
+  targetId   String?
+  action     String
+  summary    String?
+  metadata   Json?
+  snapshot   Json?
+  createdAt  DateTime @default(now())
 }
 
 enum Role {

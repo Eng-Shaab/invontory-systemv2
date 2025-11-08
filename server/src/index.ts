@@ -13,6 +13,8 @@ import saleRoutes from "./routes/saleRoutes";
 import summaryRoutes from "./routes/summaryRoutes";
 import customerRoutes from "./routes/customerRoutes";
 import purchaseRoutes from "./routes/purchaseRoutes";
+import userRoutes from "./routes/userRoutes";
+import auditRoutes from "./routes/auditRoutes";
 import { authMiddleware } from "./middleware/authMiddleware";
 /* CONFIGURATIONS */
 dotenv.config();
@@ -49,6 +51,8 @@ app.use("/sales", saleRoutes); // http://localhost:8000/sales
 app.use("/purchases", purchaseRoutes); // http://localhost:8000/purchases
 app.use("/customers", customerRoutes); // http://localhost:8000/customers
 app.use("/summary", summaryRoutes); // http://localhost:8000/summary
+app.use("/users", userRoutes); // http://localhost:8000/users
+app.use("/audit-logs", auditRoutes); // http://localhost:8000/audit-logs
 
 /* SERVER */
 const port = Number(process.env.PORT) || 3001;

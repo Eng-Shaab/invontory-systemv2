@@ -7,6 +7,7 @@ import { prisma } from "../lib/prisma";
 import { Role } from "@prisma/client";
 import { SESSION_COOKIE_NAME } from "../constants/auth";
 import type { AuthenticatedUser } from "../types/auth";
+import { recordAuditLog } from "../lib/auditLogger";
 const DEFAULT_SESSION_TTL_DAYS = 7;
 const DEFAULT_TOKEN_TTL_MINUTES = 10;
 
@@ -62,11 +63,24 @@ const sendTwoFactorEmail = async (email: string, code: string) => {
   });
 };
 
-const sanitizeUser = (user: { id: string; email: string; role: Role; name: string | null }) => ({
+const sanitizeUser = (
+  user: {
+    id: string;
+    email: string;
+    role: Role;
+    name: string | null;
+    isActive: boolean;
+    lastLoginAt: Date | null;
+    createdAt: Date;
+  },
+) => ({
   id: user.id,
   email: user.email,
   role: user.role,
   name: user.name,
+  isActive: user.isActive,
+  lastLoginAt: user.lastLoginAt,
+  createdAt: user.createdAt,
 });
 
 type AuthedRequest = Request & {
@@ -86,6 +100,11 @@ export const login = async (req: Request, res: Response) => {
 
   if (!user) {
     res.status(401).json({ message: "Invalid email or password" });
+    return;
+  }
+
+  if (!user.isActive) {
+    res.status(403).json({ message: "Account is disabled" });
     return;
   }
 
@@ -170,6 +189,19 @@ export const verifyTwoFactorCode = async (req: Request, res: Response) => {
     data: { usedAt: new Date() },
   });
 
+  const updatedUser = await prisma.user.update({
+    where: { id: tokenRecord.userId },
+    data: { lastLoginAt: new Date() },
+  });
+
+  await recordAuditLog({
+    actorId: tokenRecord.userId,
+    targetType: "USER",
+    targetId: tokenRecord.userId,
+    action: "LOGIN_SUCCESS",
+    summary: "User signed in via 2FA",
+  });
+
   const jwtToken = jwt.sign(
     {
       sessionId: session.id,
@@ -182,7 +214,7 @@ export const verifyTwoFactorCode = async (req: Request, res: Response) => {
 
   setSessionCookie(res, jwtToken);
 
-  res.json({ user: sanitizeUser(tokenRecord.user) });
+  res.json({ user: sanitizeUser(updatedUser) });
 };
 
 export const getCurrentUser = async (req: AuthedRequest, res: Response) => {

@@ -20,15 +20,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, [isDarkMode])
 
   return (
-    <div 
-    className={`${
-      isDarkMode ? "dark" : "light"} 
-     flex bg-gray-50 text-gray-900 w-full min-h-screen`}>
+    <div
+      className={`${
+        isDarkMode ? "dark" : "light"
+      } flex min-h-screen w-full bg-white text-gray-900 dark:bg-slate-900 dark:text-gray-100`}
+    >
       <Sidebar />
-      <main 
-      className={`flex flex-col w-full h-full py-7 px-9 bg-gray-50 ${
-        isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
-      }`}
+      <main
+        className={`flex min-h-screen w-full flex-col bg-white py-7 px-9 dark:bg-slate-950 ${
+          isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
+        }`}
       >
         <Navbar />
       {children} 
@@ -62,6 +63,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
       "/sales",
       "/purchases",
       "/settings",
+      "/users",
       "/test",
     ],
     [],

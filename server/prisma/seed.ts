@@ -10,6 +10,7 @@ const MODEL_KEY_OVERRIDES: Record<string, keyof PrismaClient> = {
 };
 
 async function clearData() {
+  await prisma.auditLog.deleteMany({});
   await prisma.session.deleteMany({});
   await prisma.twoFactorToken.deleteMany({});
   await prisma.sales.deleteMany({});

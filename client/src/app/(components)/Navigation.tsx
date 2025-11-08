@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Package, ShoppingCart, Users, DollarSign, TestTube } from "lucide-react"
+import { LayoutDashboard, Package, ShoppingCart, Users, DollarSign, TestTube, UserCog } from "lucide-react"
 
 const Navigation = () => {
   const pathname = usePathname()
@@ -13,6 +13,7 @@ const Navigation = () => {
     { href: "/purchases", label: "Purchases", icon: ShoppingCart },
     { href: "/customers", label: "Customers", icon: Users },
     { href: "/sales", label: "Sales", icon: DollarSign },
+    { href: "/users", label: "Users", icon: UserCog },
     { href: "/test", label: "Test System", icon: TestTube },
   ]
 

@@ -49,6 +49,12 @@ export const authMiddleware = async (req: AuthedRequest, res: Response, next: Ne
       return;
     }
 
+    if (!session.user.isActive) {
+      await prisma.session.delete({ where: { id: session.id } }).catch(() => undefined);
+      res.status(403).json({ message: "Account is disabled" });
+      return;
+    }
+
     const authUser: AuthenticatedUser = {
       id: session.user.id,
       email: session.user.email,
