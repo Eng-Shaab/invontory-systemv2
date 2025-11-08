@@ -6,10 +6,11 @@ import nodemailer from "nodemailer";
 import { prisma } from "../lib/prisma";
 import { Role } from "@prisma/client";
 import { SESSION_COOKIE_NAME } from "../constants/auth";
+import type { AuthenticatedUser } from "../types/auth";
 const DEFAULT_SESSION_TTL_DAYS = 7;
 const DEFAULT_TOKEN_TTL_MINUTES = 10;
 
-const jwtSecret = process.env.JWT_SECRET;
+const jwtSecret = process.env.JWT_SECRET ?? (process.env.NODE_ENV !== "production" ? "dev-secret" : undefined);
 if (!jwtSecret) {
   throw new Error("JWT_SECRET environment variable is required for authentication.");
 }
@@ -67,6 +68,11 @@ const sanitizeUser = (user: { id: string; email: string; role: Role; name: strin
   role: user.role,
   name: user.name,
 });
+
+type AuthedRequest = Request & {
+  user?: AuthenticatedUser;
+  sessionId?: string;
+};
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body as { email?: string; password?: string };
@@ -179,7 +185,7 @@ export const verifyTwoFactorCode = async (req: Request, res: Response) => {
   res.json({ user: sanitizeUser(tokenRecord.user) });
 };
 
-export const getCurrentUser = async (req: Request, res: Response) => {
+export const getCurrentUser = async (req: AuthedRequest, res: Response) => {
   const authUser = req.user;
 
   if (!authUser) {
@@ -197,7 +203,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
   res.json({ user: sanitizeUser(user) });
 };
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req: AuthedRequest, res: Response) => {
   const { sessionId } = req;
 
   if (sessionId) {

@@ -9,21 +9,17 @@ const MODEL_KEY_OVERRIDES: Record<string, keyof PrismaClient> = {
   users: "user",
 };
 
-async function deleteAllData(orderedFileNames: string[]) {
-  const modelKeys = orderedFileNames.map((fileName) => {
-    const baseName = path.basename(fileName, path.extname(fileName));
-    return (MODEL_KEY_OVERRIDES[baseName] ?? baseName) as keyof PrismaClient;
-  });
-
-  for (const modelKey of modelKeys) {
-    const model = prisma[modelKey] as any;
-    if (model) {
-      await model.deleteMany({});
-      console.log(`Cleared data from ${String(modelKey)}`);
-    } else {
-      console.error(`Model ${String(modelKey)} not found. Please ensure the model name is correctly specified.`);
-    }
-  }
+async function clearData() {
+  await prisma.session.deleteMany({});
+  await prisma.twoFactorToken.deleteMany({});
+  await prisma.sales.deleteMany({});
+  await prisma.purchases.deleteMany({});
+  await prisma.products.deleteMany({});
+  await prisma.customers.deleteMany({});
+  await prisma.salesSummary.deleteMany({});
+  await prisma.inventorySummary.deleteMany({});
+  await prisma.customerSummary.deleteMany({});
+  await prisma.user.deleteMany({});
 }
 
 async function main() {
@@ -40,10 +36,7 @@ async function main() {
     "customerSummary.json",
   ];
 
-  await deleteAllData(orderedFileNames);
-
-  await prisma.session.deleteMany({})
-  await prisma.twoFactorToken.deleteMany({})
+  await clearData();
 
   for (const fileName of orderedFileNames) {
     const filePath = path.join(dataDirectory, fileName);

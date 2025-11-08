@@ -12,12 +12,17 @@ interface TokenPayload {
   exp: number;
 }
 
-const jwtSecret = process.env.JWT_SECRET;
+const jwtSecret = process.env.JWT_SECRET ?? (process.env.NODE_ENV !== "production" ? "dev-secret" : undefined);
 if (!jwtSecret) {
   throw new Error("JWT_SECRET environment variable is required for authentication middleware.");
 }
 
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+type AuthedRequest = Request & {
+  user?: AuthenticatedUser;
+  sessionId?: string;
+};
+
+export const authMiddleware = async (req: AuthedRequest, res: Response, next: NextFunction) => {
   try {
   const token = req.cookies?.[SESSION_COOKIE_NAME];
 
