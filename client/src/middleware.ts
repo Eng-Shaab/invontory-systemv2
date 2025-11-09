@@ -1,31 +1,12 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 
-const PUBLIC_PATHS = ["/login", "/health"]
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-
-  if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
-    return NextResponse.next()
-  }
-
-  const session = request.cookies.get("inventory_session")
-
-  if (!session) {
-    const loginUrl = new URL("/login", request.url)
-    if (pathname !== "/") {
-      const target = `${pathname}${request.nextUrl.search}`
-      loginUrl.searchParams.set("redirectTo", target)
-    }
-    return NextResponse.redirect(loginUrl)
-  }
-
+// With API hosted on a different domain, Next.js middleware cannot see the API cookie.
+// We delegate auth gating to the client (DashboardShell + AuthContext) and let all routes pass through here.
+export function middleware(_request: NextRequest) {
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next|static|favicon.ico).*)",
-  ],
+  matcher: ["/((?!_next|static|favicon.ico).*)"],
 }
