@@ -24,8 +24,8 @@ export default function LoginPage() {
     setError(null);
     setIsSubmitting(true);
     try {
-      const { pendingToken } = await login(email, password);
-      router.push(`/verify?pendingToken=${encodeURIComponent(pendingToken)}&redirectTo=${encodeURIComponent(redirectTo)}`);
+      await login(email, password);
+      router.push(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to sign in");
       setIsSubmitting(false);
@@ -116,7 +116,7 @@ export default function LoginPage() {
                   className="h-12 w-full rounded-xl bg-gradient-to-r from-blue-600 to-sky-400 text-base font-semibold shadow-lg shadow-blue-200 transition hover:shadow-sky-200 disabled:from-blue-300 disabled:to-sky-200"
                   disabled={isBusy}
                 >
-                  {isBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send secure code"}
+                  {isBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign in"}
                 </Button>
               </form>
 

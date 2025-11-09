@@ -13,6 +13,7 @@ import type { AuthenticatedRequest } from "../types/http";
 import { recordAuditLog } from "../lib/auditLogger";
 const DEFAULT_SESSION_TTL_DAYS = 7;
 const DEFAULT_TOKEN_TTL_MINUTES = 10;
+const disable2FA = process.env.AUTH_DISABLE_2FA === "true";
 
 const jwtSecret = process.env.JWT_SECRET ?? (process.env.NODE_ENV !== "production" ? "dev-secret" : undefined);
 if (!jwtSecret) {
@@ -167,6 +168,48 @@ export const login = async (req: Request, res: Response) => {
   const isValidPassword = await bcrypt.compare(password, user.passwordHash);
   if (!isValidPassword) {
     res.status(401).json({ message: "Invalid email or password" });
+    return;
+  }
+
+  // If 2FA is disabled, create the session immediately and return the user
+  if (disable2FA) {
+    const sessionExpiresAt = new Date(Date.now() + sessionTtlDays * 24 * 60 * 60 * 1000);
+    const sessionToken = crypto.randomUUID();
+
+    const session = await prisma.session.create({
+      data: {
+        token: sessionToken,
+        userId: user.id,
+        expiresAt: sessionExpiresAt,
+      },
+    });
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() },
+    });
+
+    await recordAuditLog({
+      actorId: user.id,
+      targetType: "USER",
+      targetId: user.id,
+      action: "LOGIN_SUCCESS",
+      summary: "User signed in (2FA disabled)",
+    });
+
+    const jwtToken = jwt.sign(
+      {
+        sessionId: session.id,
+        userId: user.id,
+        role: user.role,
+      },
+      jwtSecret,
+      { expiresIn: `${sessionTtlDays}d` },
+    );
+
+    setSessionCookie(res, jwtToken);
+
+    res.json({ user: sanitizeUser(updatedUser) });
     return;
   }
 
