@@ -17,11 +17,15 @@ if (!jwtSecret) {
   throw new Error("JWT_SECRET environment variable is required for authentication.");
 }
 
+const smtpSecure = process.env.SMTP_SECURE === "true";
+const smtpPort = Number(process.env.SMTP_PORT ?? (smtpSecure ? 465 : 587));
+const smtpDebug = process.env.SMTP_DEBUG === "true";
+
 const transporter = process.env.SMTP_HOST
   ? nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: process.env.SMTP_SECURE === "true",
+      port: smtpPort,
+      secure: smtpSecure,
       auth:
         process.env.SMTP_USER && process.env.SMTP_PASS
           ? {
@@ -29,8 +33,24 @@ const transporter = process.env.SMTP_HOST
               pass: process.env.SMTP_PASS,
             }
           : undefined,
+      // Helpful timeouts to avoid hanging forever when misconfigured
+      connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT ?? 15000),
+      greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT ?? 10000),
+      socketTimeout: Number(process.env.SMTP_SOCKET_TIMEOUT ?? 20000),
+      logger: smtpDebug,
+      debug: smtpDebug,
+      tls: process.env.SMTP_TLS_REJECT_UNAUTHORIZED === "false" ? { rejectUnauthorized: false } : undefined,
     })
   : null;
+
+if (smtpDebug) {
+  console.log("SMTP config:", {
+    host: process.env.SMTP_HOST,
+    port: smtpPort,
+    secure: smtpSecure,
+    hasAuth: Boolean(process.env.SMTP_USER && process.env.SMTP_PASS),
+  });
+}
 
 const sessionTtlDays = Number(process.env.SESSION_TTL_DAYS ?? DEFAULT_SESSION_TTL_DAYS);
 const tokenTtlMinutes = Number(process.env.TWO_FACTOR_TTL_MINUTES ?? DEFAULT_TOKEN_TTL_MINUTES);
@@ -283,4 +303,23 @@ export const logout = async (req: AuthenticatedRequest, res: Response) => {
   });
 
   res.status(204).send();
+};
+
+// Optional SMTP connectivity check endpoint handler (mounted behind a route)
+export const smtpCheck = async (_req: Request, res: Response) => {
+  try {
+    if (!process.env.SMTP_HOST) {
+      res.status(200).json({ configured: false, message: "SMTP_HOST not set" });
+      return;
+    }
+    if (!transporter) {
+      res.status(200).json({ configured: false, message: "Transporter not initialized" });
+      return;
+    }
+    // verify() checks connection configuration and logs details when debug enabled
+    await transporter.verify();
+    res.status(200).json({ configured: true, status: "ok" });
+  } catch (error: any) {
+    res.status(500).json({ configured: true, status: "error", error: error?.message ?? String(error) });
+  }
 };
