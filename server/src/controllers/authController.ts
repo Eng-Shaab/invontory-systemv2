@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import dns from "dns";
+import net from "net";
 import { prisma } from "../lib/prisma";
 import { Role } from "@prisma/client";
 import { SESSION_COOKIE_NAME } from "../constants/auth";
@@ -186,6 +188,18 @@ export const login = async (req: Request, res: Response) => {
     await sendTwoFactorEmail(email, code);
   } catch (error) {
     console.error("Failed to send verification email", error);
+    if (process.env.TWO_FACTOR_ALLOW_NO_EMAIL === "true") {
+      // Don't block login flow; return pending token and, optionally, the code for debugging
+      const response: Record<string, unknown> = {
+        pendingToken: tokenRecord.id,
+        message: "Verification code generated (email delivery failed)",
+      };
+      if (process.env.TWO_FACTOR_DEBUG_RETURN_CODE === "true") {
+        response.debugCode = code;
+      }
+      res.json(response);
+      return;
+    }
     res.status(500).json({ message: "Unable to send verification code" });
     return;
   }
@@ -321,5 +335,59 @@ export const smtpCheck = async (_req: Request, res: Response) => {
     res.status(200).json({ configured: true, status: "ok" });
   } catch (error: any) {
     res.status(500).json({ configured: true, status: "error", error: error?.message ?? String(error) });
+  }
+};
+
+// Deeper diagnostics: DNS resolution + raw TCP timing
+export const smtpDiagnostics = async (_req: Request, res: Response) => {
+  const host = process.env.SMTP_HOST;
+  const port = smtpPort;
+  const secure = smtpSecure;
+  const result: Record<string, unknown> = { host, port, secure };
+  if (!host) {
+    res.status(200).json({ error: "SMTP_HOST not set" });
+    return;
+  }
+  try {
+    const startDns = Date.now();
+    const addresses = await new Promise<dns.LookupAddress[]>((resolve, reject) => {
+      dns.lookup(host, { all: true }, (err, addr) => (err ? reject(err) : resolve(addr)));
+    });
+    result.dnsMs = Date.now() - startDns;
+    result.addresses = addresses;
+    const addrForConnect = addresses[0]?.address ?? host;
+    const startConn = Date.now();
+    await new Promise<void>((resolve, reject) => {
+      const socket = net.createConnection({ host: addrForConnect, port }, () => {
+        result.connectMs = Date.now() - startConn;
+        socket.destroy();
+        resolve();
+      });
+      socket.setTimeout(8000, () => {
+        socket.destroy();
+        reject(new Error("TCP connect timeout"));
+      });
+      socket.on("error", (e) => {
+        socket.destroy();
+        reject(e);
+      });
+    });
+    if (transporter) {
+      try {
+        const startVerify = Date.now();
+        await transporter.verify();
+        result.verifyMs = Date.now() - startVerify;
+        result.verifyStatus = "ok";
+      } catch (e: any) {
+        result.verifyStatus = "error";
+        result.verifyError = e?.message ?? String(e);
+      }
+    } else {
+      result.verifyStatus = "no-transporter";
+    }
+    res.json(result);
+  } catch (error: any) {
+    result.error = error?.message ?? String(error);
+    res.status(500).json(result);
   }
 };
