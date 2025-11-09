@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import dns from "dns";
+import net from "net";
 import { prisma } from "../lib/prisma";
 import { Role } from "@prisma/client";
 import { SESSION_COOKIE_NAME } from "../constants/auth";
@@ -17,11 +19,15 @@ if (!jwtSecret) {
   throw new Error("JWT_SECRET environment variable is required for authentication.");
 }
 
+const smtpSecure = process.env.SMTP_SECURE === "true";
+const smtpPort = Number(process.env.SMTP_PORT ?? (smtpSecure ? 465 : 587));
+const smtpDebug = process.env.SMTP_DEBUG === "true";
+
 const transporter = process.env.SMTP_HOST
   ? nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: process.env.SMTP_SECURE === "true",
+      port: smtpPort,
+      secure: smtpSecure,
       auth:
         process.env.SMTP_USER && process.env.SMTP_PASS
           ? {
@@ -29,8 +35,24 @@ const transporter = process.env.SMTP_HOST
               pass: process.env.SMTP_PASS,
             }
           : undefined,
+      // Helpful timeouts to avoid hanging forever when misconfigured
+      connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT ?? 15000),
+      greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT ?? 10000),
+      socketTimeout: Number(process.env.SMTP_SOCKET_TIMEOUT ?? 20000),
+      logger: smtpDebug,
+      debug: smtpDebug,
+      tls: process.env.SMTP_TLS_REJECT_UNAUTHORIZED === "false" ? { rejectUnauthorized: false } : undefined,
     })
   : null;
+
+if (smtpDebug) {
+  console.log("SMTP config:", {
+    host: process.env.SMTP_HOST,
+    port: smtpPort,
+    secure: smtpSecure,
+    hasAuth: Boolean(process.env.SMTP_USER && process.env.SMTP_PASS),
+  });
+}
 
 const sessionTtlDays = Number(process.env.SESSION_TTL_DAYS ?? DEFAULT_SESSION_TTL_DAYS);
 const tokenTtlMinutes = Number(process.env.TWO_FACTOR_TTL_MINUTES ?? DEFAULT_TOKEN_TTL_MINUTES);
@@ -166,6 +188,18 @@ export const login = async (req: Request, res: Response) => {
     await sendTwoFactorEmail(email, code);
   } catch (error) {
     console.error("Failed to send verification email", error);
+    if (process.env.TWO_FACTOR_ALLOW_NO_EMAIL === "true") {
+      // Don't block login flow; return pending token and, optionally, the code for debugging
+      const response: Record<string, unknown> = {
+        pendingToken: tokenRecord.id,
+        message: "Verification code generated (email delivery failed)",
+      };
+      if (process.env.TWO_FACTOR_DEBUG_RETURN_CODE === "true") {
+        response.debugCode = code;
+      }
+      res.json(response);
+      return;
+    }
     res.status(500).json({ message: "Unable to send verification code" });
     return;
   }
@@ -283,4 +317,77 @@ export const logout = async (req: AuthenticatedRequest, res: Response) => {
   });
 
   res.status(204).send();
+};
+
+// Optional SMTP connectivity check endpoint handler (mounted behind a route)
+export const smtpCheck = async (_req: Request, res: Response) => {
+  try {
+    if (!process.env.SMTP_HOST) {
+      res.status(200).json({ configured: false, message: "SMTP_HOST not set" });
+      return;
+    }
+    if (!transporter) {
+      res.status(200).json({ configured: false, message: "Transporter not initialized" });
+      return;
+    }
+    // verify() checks connection configuration and logs details when debug enabled
+    await transporter.verify();
+    res.status(200).json({ configured: true, status: "ok" });
+  } catch (error: any) {
+    res.status(500).json({ configured: true, status: "error", error: error?.message ?? String(error) });
+  }
+};
+
+// Deeper diagnostics: DNS resolution + raw TCP timing
+export const smtpDiagnostics = async (_req: Request, res: Response) => {
+  const host = process.env.SMTP_HOST;
+  const port = smtpPort;
+  const secure = smtpSecure;
+  const result: Record<string, unknown> = { host, port, secure };
+  if (!host) {
+    res.status(200).json({ error: "SMTP_HOST not set" });
+    return;
+  }
+  try {
+    const startDns = Date.now();
+    const addresses = await new Promise<dns.LookupAddress[]>((resolve, reject) => {
+      dns.lookup(host, { all: true }, (err, addr) => (err ? reject(err) : resolve(addr)));
+    });
+    result.dnsMs = Date.now() - startDns;
+    result.addresses = addresses;
+    const addrForConnect = addresses[0]?.address ?? host;
+    const startConn = Date.now();
+    await new Promise<void>((resolve, reject) => {
+      const socket = net.createConnection({ host: addrForConnect, port }, () => {
+        result.connectMs = Date.now() - startConn;
+        socket.destroy();
+        resolve();
+      });
+      socket.setTimeout(8000, () => {
+        socket.destroy();
+        reject(new Error("TCP connect timeout"));
+      });
+      socket.on("error", (e) => {
+        socket.destroy();
+        reject(e);
+      });
+    });
+    if (transporter) {
+      try {
+        const startVerify = Date.now();
+        await transporter.verify();
+        result.verifyMs = Date.now() - startVerify;
+        result.verifyStatus = "ok";
+      } catch (e: any) {
+        result.verifyStatus = "error";
+        result.verifyError = e?.message ?? String(e);
+      }
+    } else {
+      result.verifyStatus = "no-transporter";
+    }
+    res.json(result);
+  } catch (error: any) {
+    result.error = error?.message ?? String(error);
+    res.status(500).json(result);
+  }
 };
