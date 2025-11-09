@@ -11,16 +11,14 @@ interface AuthUser {
 
 type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
-interface LoginResponse {
-  pendingToken: string;
-  message: string;
+interface LoginResponseDirect {
+  user: AuthUser;
 }
 
 interface AuthContextValue {
   user: AuthUser | null;
   status: AuthStatus;
-  login: (email: string, password: string) => Promise<LoginResponse>;
-  verifyCode: (pendingToken: string, code: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -67,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [refreshUser]);
 
   const login = useCallback(async (email: string, password: string) => {
-    const data = await fetchJson<LoginResponse>(`${API_BASE_URL}/auth/login`, {
+    const data = await fetchJson<LoginResponseDirect>(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -75,22 +73,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       },
       body: JSON.stringify({ email, password }),
     });
-    return data;
-  }, []);
-
-  const verifyCode = useCallback(async (pendingToken: string, code: string) => {
-    const data = await fetchJson<{ user: AuthUser }>(`${API_BASE_URL}/auth/verify-otp`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ pendingToken, code }),
-    });
-
     setUser(data.user);
     setStatus("authenticated");
   }, []);
+
+  // 2FA removed: verifyCode no longer used
 
   const logout = useCallback(async () => {
     await fetchJson(`${API_BASE_URL}/auth/logout`, {
@@ -107,11 +94,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       user,
       status,
       login,
-      verifyCode,
       logout,
       refreshUser,
     }),
-    [logout, login, refreshUser, status, user, verifyCode],
+    [logout, login, refreshUser, status, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

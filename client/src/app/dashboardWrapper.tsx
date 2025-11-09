@@ -51,7 +51,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
   const { status } = useAuth()
 
-  const authRoutes = useMemo(() => ["/login", "/verify"], [])
+  const authRoutes = useMemo(() => ["/login"], [])
 
   const dashboardBases = useMemo(
     () => [
