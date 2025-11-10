@@ -48,8 +48,7 @@ export default function LoginPage() {
                 <h1 className="mt-4 text-4xl font-semibold leading-tight">Inventory Control Made Elegant</h1>
               </div>
               <p className="max-w-sm text-sm text-blue-100/90">
-                Track products, purchases, and sales in seconds. Two-factor security keeps every action safe while your
-                team stays in sync.
+                Track products, purchases, and sales in seconds with secure, session-based access—your team stays in sync.
               </p>
             </div>
 
@@ -57,7 +56,7 @@ export default function LoginPage() {
               <p className="font-medium">Why teams trust Sanabil Abaya</p>
               <ul className="space-y-2 text-blue-50/80">
                 <li>• Real-time insight across SKUs and locations</li>
-                <li>• Secure access with email verification</li>
+                <li>• Secure access with session cookies</li>
                 <li>• Purpose-built for fast moving retail teams</li>
               </ul>
             </div>

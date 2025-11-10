@@ -10,6 +10,16 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    // Proxy API to the backend so cookies are first-party on Vercel domain
+    const backend = process.env.NEXT_PUBLIC_BACKEND_URL || "https://invontory-systemv2.onrender.com";
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${backend}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
