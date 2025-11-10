@@ -173,6 +173,7 @@ export const login = async (req: Request, res: Response) => {
 
   // If 2FA is disabled, create the session immediately and return the user
   if (disable2FA) {
+    console.log("[auth] AUTH_DISABLE_2FA active: issuing session directly for", email);
     const sessionExpiresAt = new Date(Date.now() + sessionTtlDays * 24 * 60 * 60 * 1000);
     const sessionToken = crypto.randomUUID();
 
